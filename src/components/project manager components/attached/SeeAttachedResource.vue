@@ -62,6 +62,7 @@
             :items="['Tester', 'Programador', 'Diseñador']"
             label="Puesto"
             outlined
+            color="red"
           >
           </v-select>
         </v-card-text>
@@ -139,25 +140,30 @@ export default {
       search: "",
       headers: [
         { text: "Proyecto", align: "start", value: "proyecto" },
-        { text: "Puesto", align: "center", value: "puesto" },
+        { text: "Tipo de proyecto", align: "start", value: "tipo" },
+        { text: "Puesto", align: "start", value: "puesto" },
         { text: "Editar", align: "center", value: "editar" },
         { text: "Eliminar", align: "center", value: "eliminar" },
       ],
       item: [
         {
           proyecto: "SIDEC",
+          tipo: "Software",
           puesto: "Programador",
         },
         {
           proyecto: "GACU",
+          tipo: "Diseño",
           puesto: "Diseñador",
         },
         {
           proyecto: "PROA",
+          tipo: "Arquitectura",
           puesto: "Master",
         },
         {
           proyecto: "SIDEC",
+          tipo: "Software",
           puesto: "Programador",
         },
       ],
