@@ -24,7 +24,6 @@
           :items="cosas"
           :search="search"
           :items-per-page="5"
-          class="elevation-1 mt-16"
         >
           <template v-slot:[`item.down`]="{ item }">
             <v-btn rounded color="blueButton" @click="bajar(item)">
@@ -41,17 +40,14 @@
         <div class="text-center">
           <!--Dialog de subir el avance-->
           <v-dialog v-model="dialog" width="500">
-            <v-card>
-              <v-card-title class="white lighten-2">
-                <h6
-                  class="font-weight-bold text-h6 text-decoration-underline mt-2"
-                >
-                  Subir avance
-                </h6>
+            <v-card class="rounded-lg">
+              <v-card-title class="red">
+                <span class="headline" style="color: white">
+                  <v-icon color="white">mdi-cloud-upload</v-icon> Subir avance
+                </span>
               </v-card-title>
-
-              <v-card-text>
-                <h6 class="subtitle-1 mb-2">Archivo:</h6>
+              <v-card-text class="mt-5">
+                <span class="subtitle-1 black--text"> Archivo:</span>
                 <v-file-input
                   outlined
                   dense
@@ -59,13 +55,14 @@
                   prepend-icon=""
                   prepend-inner-icon="mdi-paperclip"
                 ></v-file-input>
-                <h6 class="subtitle-1 mb-2">Comentario:</h6>
+                <span class="subtitle-1 black--text"> Comentario:</span>
                 <v-textarea
                   outlined
                   color="red"
                   name="input-7-4"
                   prepend-icon=""
                   prepend-inner-icon="mdi-message-text"
+                  no-resize
                 ></v-textarea>
                 <v-row>
                   <v-col cols="12" sm="9" md="3"></v-col>
@@ -83,20 +80,20 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn
-                  color="grayButton"
-                  class="black--text"
-                  rounded
+                  elevation="2"
+                  color="blue-grey darken-1"
+                  text
                   @click="dialog = false"
                 >
                   Cancelar
                 </v-btn>
                 <v-btn
-                  color="red"
-                  class="white--text"
-                  rounded
+                  elevation="2"
+                  color="green darken-1"
+                  text
                   @click="dialog = false"
                 >
-                  Añadir Entregable
+                  Guardar cambios
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -129,11 +126,9 @@ export default {
   },
   methods: {
     subir(item) {
-      this.dialog=true;
+      this.dialog = true;
     },
-    bajar(item) {
-
-    },
+    bajar(item) {},
   },
 };
 </script>

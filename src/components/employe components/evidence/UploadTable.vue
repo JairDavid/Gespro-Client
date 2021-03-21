@@ -14,24 +14,22 @@
           label="Buscar"
           single-line
           hide-details
+          color="red"
         >
         </v-text-field
       ></v-card-title>
-      <div>
-        <v-data-table
-          :headers="encabezado"
-          :items="cosas"
-          :search="search"
-          :items-per-page="5"
-          class="elevation-1 mt-16"
-        >
-          <template v-slot:[`item.button`]="{ item }">
-            <v-btn rounded color="#3DB39E" @click="consultaGeneral(item)">
-              <v-icon class="white--text">mdi-eye</v-icon>
-            </v-btn>
-          </template>
-        </v-data-table>
-      </div>
+      <v-data-table
+        :headers="encabezado"
+        :items="cosas"
+        :search="search"
+        :items-per-page="5"
+      >
+        <template v-slot:[`item.button`]="{ item }">
+          <v-btn rounded color="greenButton" @click="consultaGeneral(item)">
+            <v-icon class="white--text">mdi-eye</v-icon>
+          </v-btn>
+        </template>
+      </v-data-table>
     </v-card>
   </div>
 </template>
