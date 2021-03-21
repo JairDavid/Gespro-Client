@@ -1,4 +1,8 @@
---------------------------------------Borrador--------------------------------------      
+--------------------------------------Borrador--------------------------------------  
+git status (verifica los archivos que han tenido cambios)
+git add .  (agrega todos los archivos a tu rama)
+git remote add origin https://gitlab.com/gesproteam/gesproweb.git   (añades el repo a la cual quieres subir cambios)
+git push -u origin master    (publica los cambios al repo)
       
       project: {
         id:9,
