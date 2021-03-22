@@ -43,19 +43,24 @@ export default {
   name: "MenuProjectManager",
   methods: {
     gestionarRecursos() {
-      this.$router.push("/manageResources");
+      const path = `/manageResources`;
+      if (this.$route.path !== path) this.$router.push(path);
     },
     home() {
-      this.$router.push("/homeProjectManager");
+      const path = `/homeProjectManager`;
+      if (this.$route.path !== path) this.$router.push(path);
     },
     consultarAvances() {
-      this.$router.push("/checkProgress");
+      const path = `/checkProgress`;
+      if (this.$route.path !== path) this.$router.push(path);
     },
     consultarEntregables() {
-      this.$router.push("/checkDeliverable");
+      const path = `/checkDeliverable`;
+      if (this.$route.path !== path) this.$router.push(path);
     },
     profile() {
-      this.$router.push("/profile");
+      const path = `/profile`;
+      if (this.$route.path !== path) this.$router.push(path);
     },
     logout() {
       this.$router.replace("/");
