@@ -56,6 +56,21 @@ const routes = [
     component: () => import('../views/coordinator views/GeneralProject.vue')
   },
   ///////////////////Controller routes////////////////////////
+  {
+    path: '/homeController',
+    name: 'inicioControlador',
+    component: () => import('../views/controller views/HomeController.vue')
+  },
+  {
+    path: '/phase',
+    name: 'fases',
+    component: () => import('../views/controller views/Phase.vue')
+  },
+  {
+    path: '/deliverable',
+    name: 'entregables',
+    component: () => import('../views/controller views/Deliverable.vue')
+  },
   ///////////////////Human resources routes////////////////////////
   {
     path: '/homeHumanResources',

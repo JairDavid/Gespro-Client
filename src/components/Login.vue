@@ -106,7 +106,7 @@ export default {
   },
   methods: {
     acceder() {
-      this.$router.replace("/homeCoordinator");
+      this.$router.replace("/homeController");
     },
   },
 };
