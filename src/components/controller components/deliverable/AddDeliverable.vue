@@ -16,11 +16,12 @@
         <v-text-field
           color="red"
           outlined
-          label="Nombre de la fase"
+          label="Nombre del entregable"
           prepend-inner-icon="mdi-ballot"
+          v-model="deliverable.name"
         ></v-text-field>
         <v-file-input
-          accept="image/*"
+          @change="getFile"
           label="Archivo"
           outlined
           color="red"
@@ -43,7 +44,7 @@
           elevation="2"
           color="green darken-1"
           text
-          @click="dialog = false"
+          @click="upload()"
         >
           Guardar
         </v-btn>
@@ -52,17 +53,54 @@
   </v-dialog>
 </template>
 <script>
+import Notify from "../../../notifications/Notify";
+import DeliverableService from "../../../services/controller/service/DeliverableService";
 export default {
   name: "AddDeliverable",
   data() {
     return {
-      phase: {
-        id: null, //verificar que no mande errores a la API
+      deliverable: {
+        id: null,
         name: "",
-        type: "",
       },
       dialog: false,
+      currentFile: undefined,
     };
+  },
+  methods: {
+    upload() {
+      if (!this.currentFile || this.deliverable.name === "") {
+        Notify.fillFields("uploadFile");
+      } else {
+        const formData = new FormData();
+        formData.append(
+          `json`, `{"name":"${this.deliverable.name}"}`
+        );
+
+        formData.append(
+          "archivo" , this.currentFile
+        );
+
+        DeliverableService.save(formData)
+        .then((response) => {
+          Notify.done("deliverable");
+          this.currentFile = undefined;
+          this.charge();
+          this.dialog = false;
+        }).catch ((e) => {
+          console.log(e)
+          Notify.error("saveData");
+        })
+
+      }
+
+    },
+    getFile(e) {
+      this.currentFile = e;
+    },
+    charge(){
+      this.$emit("charge");
+    }
   },
 };
 </script>

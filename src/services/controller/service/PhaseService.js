@@ -1,6 +1,6 @@
-import API from './ApiType'
+import API from '../api/ApiPhase'
 
-class ControllerService{
+class PhaseService{
     listAll(){
         return API.get("/consultarTodos")
     }
@@ -12,8 +12,8 @@ class ControllerService{
         return API.post('/guardar',obj)
     }
 
-    update(obj){
-    	return API.put('/actualizar',obj)
+    update(obj, id){
+    	return API.put(`/actualizar/${id}`,obj)
     }
 
     delete(id){
@@ -21,4 +21,4 @@ class ControllerService{
     }
 }
 
-export default new ControllerService();
+export default new PhaseService();

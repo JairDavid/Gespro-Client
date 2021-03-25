@@ -169,7 +169,7 @@
 </template>
 <script>
 import Notify from "../../../notifications/Notify";
-import ControllerService from "../../../services/controller/ControllerService";
+import ControllerService from "../../../services/controller/service/ControllerService";
 import EmployeService from "../../../services/humanResource/service/EmployeService";
 import CoordinatorService from "../../../services/coordinator/CoordinatorService";
 export default {

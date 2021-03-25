@@ -8,8 +8,14 @@ class Notify {
             case 'searchInput':
                 text = 'Debes ingresar el nombre del proyecto.'
                 break;
+            case 'uploadFile':
+                text = 'Debes seleccionar un archivo.'
+                break;
             case 'form':
                 text = 'Todos los campos son obligatorios; Excepto descripción.'
+                break;
+            case 'form-phase':
+                text = 'Nombre obligatorio.'
                 break;
             case 'forceToSearch':
                 text = 'Primero debes buscar un proyecto.'
@@ -42,14 +48,29 @@ class Notify {
             case 'type':
                 text = "Tipo agregado"
                 break;
+            case 'deliverable':
+                text = "Entregable agregado"
+                break;
             case 'phase':
                 text = 'Fase agregada'
                 break;
             case 'deleteProject':
                 text = 'Proyecto eliminado'
                 break;
+            case 'deletePhase':
+                text = 'Fase eliminada'
+                break;
+            case 'deleteDeliverabla':
+                text = 'Entregable eliminado'
+                break;
             case 'updateProject':
                 text = 'Proyecto actualizado'
+                break;
+            case 'updatePhase':
+                text = 'Fase actualizado'
+                break;
+            case 'updateDeliverable':
+                text = 'Entregable actualizado'
                 break;
         }
         return Vue.$toast.success(text + ' correctamente.', {
