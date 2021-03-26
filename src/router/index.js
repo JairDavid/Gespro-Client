@@ -146,6 +146,11 @@ const routes = [
     component: () => import('../views/employe views/UploadEvidences.vue')
   },
   {
+    path: '/btnUploadDeliverable/:id',
+    name: 'btnSubirEvidencia',
+    component: () => import('../views/employe views/DeliverableUpDown.vue')
+  },
+  {
     path: '/UpDown',
     name: 'subirBajarEntregable',
     component: () => import('../views/employe views/DeliverableUpDown.vue')

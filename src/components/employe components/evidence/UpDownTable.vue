@@ -21,7 +21,7 @@
       <div>
         <v-data-table
           :headers="encabezado"
-          :items="cosas"
+          :items="deliverables"
           :search="search"
           :items-per-page="5"
         >
@@ -47,17 +47,18 @@
                 </span>
               </v-card-title>
               <v-card-text class="mt-5">
-                <span class="subtitle-1 black--text"> Archivo:</span>
                 <v-file-input
                   outlined
+                  label="Archivo"
                   dense
                   color="red"
                   prepend-icon=""
                   prepend-inner-icon="mdi-paperclip"
                 ></v-file-input>
-                <span class="subtitle-1 black--text"> Comentario:</span>
+
                 <v-textarea
                   outlined
+                  label="Comentario"
                   color="red"
                   name="input-7-4"
                   prepend-icon=""
@@ -104,6 +105,12 @@
   </div>
 </template>
 <script>
+import EmployeService from "../../../services/employe/service/ProgressService";
+import Notify from "../../../notifications/Notify";
+import AttachedResourceService from "../../../services/projectManager/service/AttachedResourceService";
+import ProjectPhaseService from "../../../services/employe/service/ProjectPhaseService";
+import DeliverableAssigmentService from "../../../services/employe/service/DeliverableAssigmentService";
+
 export default {
   name: "UpDownTable",
   data() {
@@ -111,16 +118,16 @@ export default {
       selected: false,
       search: "",
       encabezado: [
-        { text: "Lista de entregables", align: "start", value: "name" },
+        {
+          text: "Lista de entregables",
+          align: "start",
+          value: "deliverable.name",
+        },
         { text: "Descargar archivo", align: "center", value: "down" },
         { text: "Subir avance", align: "center", value: "up" },
       ],
-      cosas: [
-        { name: "DFR" },
-        { name: "Lista de interesados" },
-        { name: "Casos de uso" },
-        { name: "Diagramas UML" },
-      ],
+      deliverables: [],
+      phases: [],
       dialog: false,
     };
   },
@@ -128,7 +135,35 @@ export default {
     subir(item) {
       this.dialog = true;
     },
+    getPhases(id) {
+      ProjectPhaseService.searchIdProject(id)
+        .then((response) => {
+          this.phases = response.data;
+          this.phases.map((item, i) => {
+            let idFase = item.id;
+            DeliverableAssigmentService.searchDeliverable(idFase)
+              .then((response) => {
+                this.deliverables[i] = response.data;
+              })
+              .catch((e) => {
+                console.log(e);
+                Notify.error("getData");
+              });
+          });
+        })
+        .catch((e) => {
+          console.log(e);
+          Notify.error("getData");
+        });
+    },
     bajar(item) {},
+    getAllDeliverables() {},
+  },
+  mounted() {
+    if (this.$route.params.id === undefined) {
+    } else {
+      this.getPhases(this.$route.params.id);
+    }
   },
 };
 </script>

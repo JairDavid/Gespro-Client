@@ -20,7 +20,7 @@
       ></v-card-title>
       <v-data-table
         :headers="encabezado"
-        :items="cosas"
+        :items="projects"
         :search="search"
         :items-per-page="5"
       >
@@ -34,26 +34,47 @@
   </div>
 </template>
 <script>
+
+import EmployeService from "../../../services/employe/service/ProgressService";
+import Notify from "../../../notifications/Notify";
+import AttachedResourceService from "../../../services/employe/service/AttachedResourceService";
+
+
+
 export default {
   name: "UploadTable",
   data() {
     return {
       search: "",
       encabezado: [
-        { text: "Nombre de proyecto", align: "start", value: "name" },
-        { text: "Lider del proyecto", align: "start", value: "lider" },
+        { text: "Nombre de proyecto", align: "start", value: "project.name" },
+        { text: "Lider del proyecto", align: "start", value: "project.employe.firstName" },
         { text: "Ver entregables", align: "center", value: "button" },
       ],
-      cosas: [
-        { name: "SIDEC", lider: "José Manuel" },
-        { name: "CODEC", lider: "Marco peréz" },
+      projects: [
+        
       ],
     };
   },
+
   methods: {
     consultaGeneral(item) {
-      this.$router.push("/UpDown");
+      
+      this.$router.push("/btnUploadDeliverable/"+item.project.type.id);
     },
+    getAllProjects(){
+      AttachedResourceService.getByIdEmp(1)
+      .then((response )=>{
+        this.projects=response.data;
+      })
+      .catch((e)=>{
+        console.log(e);
+        Notify.error("getData");
+      });
+    },
+  },
+  mounted(){
+    this.getAllProjects();
   },
 };
 </script>
