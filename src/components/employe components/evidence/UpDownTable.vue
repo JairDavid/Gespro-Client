@@ -161,7 +161,7 @@ export default {
             let idFase = item.id;
             DeliverableAssigmentService.searchDeliverable(idFase)
               .then((response) => {
-                this.deliverables[i] = response.data;
+                this.deliverables.push(response.data);
               })
               .catch((e) => {
                 console.log(e);
@@ -203,6 +203,7 @@ export default {
     },
   },
   mounted() {
+    this.deliverables=[];
     this.getPhases(this.$route.params.id);
     this.idProyecto = this.$route.params.proyecto;
   },
