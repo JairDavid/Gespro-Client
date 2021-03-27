@@ -75,7 +75,7 @@
           prepend-inner-icon="mdi-clipboard-account"
           v-bind:items="employees"
           v-model="project.employe.id"
-          item-text="firstName"
+          item-text="fullName"
           item-value="id"
         ></v-select>
 
