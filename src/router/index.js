@@ -146,7 +146,7 @@ const routes = [
     component: () => import('../views/employe views/UploadEvidences.vue')
   },
   {
-    path: '/btnUploadDeliverable/:id',
+    path: '/btnUploadDeliverable/:id/:proyecto',
     name: 'btnSubirEvidencia',
     component: () => import('../views/employe views/DeliverableUpDown.vue')
   },

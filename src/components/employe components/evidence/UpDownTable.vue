@@ -26,7 +26,8 @@
           :items-per-page="5"
         >
           <template v-slot:[`item.down`]="{ item }">
-            <v-btn rounded color="blueButton" @click="bajar(item)">
+            <!--<a :href="'http://localhost:8080/entregable/descargar/'+item.id">Descargar</a>-->
+            <v-btn rounded color="blueButton" :href="'http://localhost:8080/entregable/descargar/'+item.id">
               <v-icon class="white--text">mdi-cloud-download</v-icon>
             </v-btn>
           </template>
@@ -50,6 +51,7 @@
                 <v-file-input
                   outlined
                   label="Archivo"
+                  @change="getFile"
                   dense
                   color="red"
                   prepend-icon=""
@@ -60,6 +62,7 @@
                   outlined
                   label="Comentario"
                   color="red"
+                  v-model="progress.description"
                   name="input-7-4"
                   prepend-icon=""
                   prepend-inner-icon="mdi-message-text"
@@ -92,7 +95,7 @@
                   elevation="2"
                   color="green darken-1"
                   text
-                  @click="dialog = false"
+                  @click="upload()"
                 >
                   Guardar cambios
                 </v-btn>
@@ -105,9 +108,9 @@
   </div>
 </template>
 <script>
-import EmployeService from "../../../services/employe/service/ProgressService";
+import ProgressService from "../../../services/employe/service/ProgressService";
 import Notify from "../../../notifications/Notify";
-import AttachedResourceService from "../../../services/projectManager/service/AttachedResourceService";
+import DeliverableService from "../../../services/employe/service/DeliverableService";
 import ProjectPhaseService from "../../../services/employe/service/ProjectPhaseService";
 import DeliverableAssigmentService from "../../../services/employe/service/DeliverableAssigmentService";
 
@@ -117,6 +120,7 @@ export default {
     return {
       selected: false,
       search: "",
+      idProyecto: 0,
       encabezado: [
         {
           text: "Lista de entregables",
@@ -128,12 +132,23 @@ export default {
       ],
       deliverables: [],
       phases: [],
+      currentFile: undefined,
+      idAsignacion:0,
+      progress: {
+        id:null,
+        description:"",
+        finish: false,
+        project: {
+          id:0,
+        },
+      },
       dialog: false,
     };
   },
   methods: {
     subir(item) {
       this.dialog = true;
+      this.idAsignacion = item.id;
     },
     getPhases(id) {
       ProjectPhaseService.searchIdProject(id)
@@ -156,14 +171,46 @@ export default {
           Notify.error("getData");
         });
     },
-    bajar(item) {},
+    upload() {
+      if (!this.currentFile || this.progress.description === "") {
+        Notify.fillFields("saveProgress");
+      } else {
+        const formData = new FormData();
+        formData.append(  
+          `json`, `{"description":"${this.progress.description}","finish":"${this.progress.finish}","project":{"id":"${this.idProyecto}"},"deliverableAssigment":{"id":"${this.idAsignacion}"}}`
+        );
+
+        formData.append(
+          "archivo" , this.currentFile
+        );
+        
+        ProgressService.save(formData)
+        .then((response) => {
+          Notify.done("progress");
+          this.currentFile = undefined;
+          this.dialog = false;
+        }).catch ((e) => {
+          console.log(e)
+          Notify.error("saveData");
+        })
+
+      }
+      
+
+    },
+    getFile(e) {
+      this.currentFile = e;
+    },
+
+    bajar(item) {
+      let url = 'http://localhost:8080/entregable/descargar/'+item.id;
+      this.window.location.href = url;
+    },
     getAllDeliverables() {},
   },
   mounted() {
-    if (this.$route.params.id === undefined) {
-    } else {
-      this.getPhases(this.$route.params.id);
-    }
+    this.getPhases(this.$route.params.id);
+    this.idProyecto=this.$route.params.proyecto;
   },
 };
 </script>

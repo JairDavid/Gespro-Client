@@ -60,7 +60,7 @@ export default {
   methods: {
     consultaGeneral(item) {
       
-      this.$router.push("/btnUploadDeliverable/"+item.project.type.id);
+      this.$router.push("/btnUploadDeliverable/"+item.project.type.id+"/"+item.project.id);
     },
     getAllProjects(){
       AttachedResourceService.getByIdEmp(1)

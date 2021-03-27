@@ -14,6 +14,9 @@ class Notify {
             case 'forceToSearch':
                 text = 'Primero debes buscar un proyecto.'
                 break;
+            case 'saveProgress':
+                text = 'Archivo y comentario son obligatorios.'
+                break;
         }
         return Vue.$toast.warning(text, {
             position: "bottom-right",
@@ -50,6 +53,9 @@ class Notify {
                 break;
             case 'updateProject':
                 text = 'Proyecto actualizado'
+                break;
+            case 'progress':
+                text = 'Avance agregado'
                 break;
         }
         return Vue.$toast.success(text + ' correctamente.', {

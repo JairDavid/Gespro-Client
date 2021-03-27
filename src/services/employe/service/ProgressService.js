@@ -1,6 +1,6 @@
 import API from '../api/ApiProgress';
 
-class EmployeService {
+class ProgressService {
 
 	getAll() {
 		return API.get("/consultarTodos");
@@ -8,6 +8,10 @@ class EmployeService {
 
 	getById(id) {
 		return API.get(`/consultaUnica/${id}`);
+	}
+
+	listAllTrue() {
+		return API.get("/consultarTerminados");
 	}
 
 	save(obj) {
@@ -24,4 +28,4 @@ class EmployeService {
 
 }
 
-export default new EmployeService();
+export default new ProgressService();
