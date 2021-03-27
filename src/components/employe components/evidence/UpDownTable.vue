@@ -26,8 +26,11 @@
           :items-per-page="5"
         >
           <template v-slot:[`item.down`]="{ item }">
-            <!--<a :href="'http://localhost:8080/entregable/descargar/'+item.id">Descargar</a>-->
-            <v-btn rounded color="blueButton" :href="'http://localhost:8080/entregable/descargar/'+item.id">
+            <v-btn
+              rounded
+              color="blueButton"
+              :href="'http://localhost:8080/entregable/descargar/' + item.id"
+            >
               <v-icon class="white--text">mdi-cloud-download</v-icon>
             </v-btn>
           </template>
@@ -133,13 +136,13 @@ export default {
       deliverables: [],
       phases: [],
       currentFile: undefined,
-      idAsignacion:0,
+      idAsignacion: 0,
       progress: {
-        id:null,
-        description:"",
+        id: null,
+        description: "",
         finish: false,
         project: {
-          id:0,
+          id: 0,
         },
       },
       dialog: false,
@@ -176,41 +179,32 @@ export default {
         Notify.fillFields("saveProgress");
       } else {
         const formData = new FormData();
-        formData.append(  
-          `json`, `{"description":"${this.progress.description}","finish":"${this.progress.finish}","project":{"id":"${this.idProyecto}"},"deliverableAssigment":{"id":"${this.idAsignacion}"}}`
-        );
-
         formData.append(
-          "archivo" , this.currentFile
+          `json`,
+          `{"description":"${this.progress.description}","finish":"${this.progress.finish}","project":{"id":"${this.idProyecto}"},"deliverableAssigment":{"id":"${this.idAsignacion}"}}`
         );
-        
+
+        formData.append("archivo", this.currentFile);
+
         ProgressService.save(formData)
-        .then((response) => {
-          Notify.done("progress");
-          this.currentFile = undefined;
-          this.dialog = false;
-        }).catch ((e) => {
-          console.log(e)
-          Notify.error("saveData");
-        })
-
+          .then((response) => {
+            Notify.done("progress");
+            this.currentFile = undefined;
+            this.dialog = false;
+          })
+          .catch((e) => {
+            console.log(e);
+            Notify.error("saveData");
+          });
       }
-      
-
     },
     getFile(e) {
       this.currentFile = e;
     },
-
-    bajar(item) {
-      let url = 'http://localhost:8080/entregable/descargar/'+item.id;
-      this.window.location.href = url;
-    },
-    getAllDeliverables() {},
   },
   mounted() {
     this.getPhases(this.$route.params.id);
-    this.idProyecto=this.$route.params.proyecto;
+    this.idProyecto = this.$route.params.proyecto;
   },
 };
 </script>
