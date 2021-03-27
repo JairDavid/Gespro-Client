@@ -18,7 +18,7 @@
         ></v-text-field>
       </v-card-title>
       <div align="center">
-        <v-data-table :headers="headers" :items="item" :search="search">
+        <v-data-table :headers="headers" :items="proyects" :search="search">
           <template v-slot:[`item.progreso`]="{ item }">
             <v-btn
               rounded
@@ -33,68 +33,107 @@
         </v-data-table>
       </div>
     </v-card>
-    <v-dialog v-model="dialog" max-width="600">
+    <v-dialog v-model="dialog" persistent max-width="600">
       <v-card rounded="lg">
         <v-card-title class="red">
           <span class="headline" style="color: white"
             ><v-icon color="white">mdi-progress-clock</v-icon> Proyecto
-            {{ this.seeDataRow.nombreProyecto }}
+            {{ this.seeDataRow.name }}
           </span>
         </v-card-title>
         <v-card-text class="mt-5">
           <span class="black--text"
-            >Progreso total: {{ this.seeDataRow.progresoTotal }}%</span
+            >Progreso total: {{ this.suma }}%</span
           >
           <v-progress-linear
             color="teal"
             height="10"
             buffer-value="100"
             class="mt-2"
-            :value="this.seeDataRow.progresoTotal"
+            :value="this.suma"
           ></v-progress-linear>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="gary" @click="dialog = false"> Cerrar </v-btn>
+          <v-btn color="gary"  @click="dialog = false , limpiar()"> Cerrar </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
   </div>
 </template>
 <script>
+import ProjectService from "../../../services/projectManager/service/ProjectService";
+import ProgressService from "../../../services/projectManager/service/ProgressService";
+
 export default {
   name: "ProgressTable",
   data() {
     return {
       search: "",
       headers: [
-        { text: "Nombre del proyecto", value: "nombreProyecto" },
-        { text: "Nombre del responsable", value: "responsable" },
+        { text: "Nombre del proyecto", value: "name" },
+        { text: "Nombre del responsable", value: "employe.firstName" },
         { text: "Ver progreso", value: "progreso" },
       ],
-
-      item: [
-        {
-          nombreProyecto: "USTORE",
-          responsable: "Juan Perex",
-          progresoTotal: 20,
-        },
-        {
-          nombreProyecto: "SIDEC",
-          responsable: "Paco Memo",
-          progresoTotal: 100,
-        },
-      ],
+      suma: 0,
+      proyects: [],
+      progreso: [],
       seeDataRow: {},
       dialog: false,
     };
   },
   methods: {
+    limpiar(){
+      this.suma = 0
+    },
+
+    progressSuma(){
+        this.progreso.map(item =>{
+        this.suma += item.deliverableAssigment.percent
+
+      })
+      console.log(this.suma)
+
+
+    },
+
+    getAllProgress(id){
+      ProgressService.searchIdProject(id)
+      .then(response =>{
+        this.progreso = response.data
+        this.progressSuma()
+      }).catch(e =>{
+        console.log(e)
+      })
+
+    
+    },
+
+    //Obtiene todos los proyectos
+    getAllProyects(){
+      ProjectService.getAll()
+      .then(response =>{
+        this.proyects = response.data
+      })
+      .catch(e =>{
+        console.log(e)
+      })
+
+    },
+
     verProgreso(item) {
+      let id = 0
       this.dialog = true;
       this.seeDataRow = item;
+      id = this.seeDataRow.id
+      this.getAllProgress(id)
+      console.log(id)
     },
   },
+
+  mounted(){
+    this.getAllProyects()
+  }
 };
 </script>
