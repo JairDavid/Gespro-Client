@@ -12,8 +12,8 @@
         <v-col cols="12" sm="7">
           <h6 class="font-weight-bold text-h6 mb-2">Datos de usuario</h6>
           <v-row no-gutters>
-            <v-col cols="12" sm="5">
-              <h6 class="subtitle-1 mb-2">Nombre(s):</h6>
+            <v-col cols="12" sm="12">
+              <h6 class="subtitle-1 mb-2">Nombre completo:</h6>
               <v-text-field
                 outlined
                 dense
@@ -21,16 +21,7 @@
                 prepend-inner-icon="mdi-account-circle"
               ></v-text-field>
             </v-col>
-            <v-col cols="12" sm="1"></v-col>
-            <v-col cols="12" sm="6">
-              <h6 class="subtitle-1 mb-2">Apellidos:</h6>
-              <v-text-field
-                outlined
-                dense
-                color="#A93226"
-                prepend-inner-icon="mdi-account-circle"
-              ></v-text-field>
-            </v-col>
+            
             <v-col cols="12" sm="12">
               <h6 class="subtitle-1 mb-2">Domicilio:</h6>
               <v-text-field
