@@ -73,6 +73,9 @@ class Notify {
             case 'add':
                 text = 'al agregar, verifique los datos.'
                 break;
+            case 'anotherAdd':
+                text = 'este empleado ya se encuentra registrado en el proyecto'
+                break;    
             case 'delete':
                 text = 'al borrar, verifique los datos.'
                 break;
