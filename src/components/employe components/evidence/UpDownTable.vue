@@ -56,6 +56,7 @@
                   label="Archivo"
                   @change="getFile"
                   dense
+                  v-model="currentFile"
                   color="red"
                   prepend-icon=""
                   prepend-inner-icon="mdi-paperclip"
@@ -191,6 +192,7 @@ export default {
             Notify.done("progress");
             this.currentFile = undefined;
             this.dialog = false;
+            this.progress.description = "";
           })
           .catch((e) => {
             console.log(e);
