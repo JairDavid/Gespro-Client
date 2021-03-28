@@ -17,7 +17,7 @@
           >
             <v-icon class="white--text">mdi-arrow-left-thick</v-icon>
           </v-btn>
-          Proyectos de: {{ dataExtern.firstName }}
+          Proyectos de: {{ dataExtern.fullName }}
           <v-spacer></v-spacer>
           <v-text-field
             v-model="search"
@@ -174,9 +174,10 @@ export default {
     };
   },
   methods: {
+    
+    // Obtener todos los proyectos del empleado dependiendo del "id"
     getAllProjectsAdscrito(){
       let id = this.dataExtern.id
-      console.log(id)
       AttachedResource.getOneAdscritoProjects(id)
       .then(response =>{
         this.adscritoProyects = response.data
@@ -199,7 +200,8 @@ export default {
       })
 
     },
-
+    
+    // Actualizar el puesto del empleado
     editLabor(){
       if(
         this.Adscrito.id === "" ||
@@ -208,7 +210,6 @@ export default {
         this.Adscrito.labor.id === "" 
       ){
       }else{
-        console.log(this.Adscrito)
         AttachedResource.update(this.Adscrito.id,this.Adscrito)
         .then(response =>{
           this.Adscrito.id = null,
@@ -227,6 +228,7 @@ export default {
       }
     },
 
+    // Eliminar un proyecto
     deleteProject(){
       let id = this.deleteDataRow.id
       AttachedResource.delete(id)
@@ -242,7 +244,7 @@ export default {
       })
 
     },
-
+    // Recargar la lista de los proyectos de los empleados
     recarga(){
       this.getAllProjectsAdscrito()
 
@@ -252,13 +254,11 @@ export default {
       this.getAllProjectsAdscrito()
       this.dialog2 = true;
       this.Adscrito = item;
-      console.log(this.Adscrito)
     },
 
     eliminar(item) {
       this.dialog3 = true;
       this.deleteDataRow = item;
-      console.log(this.deleteDataRow.id)
     },
   },
 

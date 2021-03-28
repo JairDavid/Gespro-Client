@@ -44,7 +44,7 @@
           >
             <v-icon class="white--text">mdi-arrow-left-thick</v-icon>
           </v-btn>
-          Fases de: {{ seeDataRow.name }}
+          Entregables de: {{ seeDataRow.name }}
           <v-spacer></v-spacer>
           <v-text-field
             v-model="searchTable"
@@ -65,7 +65,8 @@
               rounded
               color="blueButton"
               dark
-              @click="descarga(item)"
+              :href="`http://10.0.0.11:8080/entregable/descargar/${item.deliverable.id}`"
+              
             >
               <v-icon> mdi-cloud-download </v-icon>
             </v-btn>
@@ -119,10 +120,6 @@ export default {
         });
     },
 
-    descarga(item){
-
-    },
-
     // Obtener todas las fases dependiendo del tipo de proyecto
     verEntregables(item) {
       let id = 0;
@@ -130,7 +127,7 @@ export default {
       this.dialog = true;
       this.seeDataRow = item;
       id = this.seeDataRow.type.id;
-      console.log(id);
+
       ProgressService.searchIdProject(id)
         .then((response) => {
           this.fases = response.data;
@@ -140,7 +137,8 @@ export default {
             idPhase = item.id
             DeliverableAssigmentService.searchDeliverable(idPhase)
             .then(response =>{
-              this.entregables[i] = response.data
+              this.entregables.push(response.data)
+
             }).catch(e =>{
               console.log(e)
             })

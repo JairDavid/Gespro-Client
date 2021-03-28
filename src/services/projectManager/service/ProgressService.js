@@ -11,7 +11,7 @@ class ProgressService{
     searchIdProject(id){
         return ApiProgress.get(`/buscarProyecto/${id}`)
     }
-
+    
     save(obj){
         return ApiProgress.post('/guardar',obj)
     }

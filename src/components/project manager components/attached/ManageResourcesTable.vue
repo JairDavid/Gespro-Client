@@ -109,7 +109,7 @@ export default {
       search: "",
       headers: [
         { text: "Curp", align: "start", value: "curp" },
-        { text: "Nombre", align: "center", value: "firstName" },
+        { text: "Nombre", align: "center", value: "fullName" },
         { text: "Direccion", align: "center", value: "adress" },
         { text: "Añadir", align: "center", value: "anadir" },
         { text: "Ver proyectos asignados", align: "center", value: "ver" },
@@ -140,11 +140,9 @@ export default {
   methods: {
     // Obtener todos los proyectos en donde el empleado este registrado
     getAllProjectsAdscrito(id) {
-      console.log(id);
       AttachedResourceService.getOneAdscritoProjects(id)
         .then((response) => {
           this.adscritoProyects = response.data;
-          console.log(response.data);
         })
         .catch((e) => {
           console.log(e);
@@ -191,7 +189,6 @@ export default {
       this.dialog = true;
       this.addDataRow = item;
       this.getAllProjectsAdscrito(item.id);
-      console.log(item.id);
     },
     // valido si ya se encuentra el empleado registrado en el proyecto
     validar() {
@@ -204,7 +201,6 @@ export default {
 
       for (let j = 0; j < this.idProjects.length; j++) {
         if (this.Adscrito.project.id === this.idProjects[j]) {
-          console.log("El proyecto ya existe");
           Notify.error("anotherAdd")
           flag = true;
         }
@@ -233,7 +229,7 @@ export default {
         this.Adscrito.project.id === "" ||
         this.Adscrito.labor.id === ""
       ) {
-        Notify.fillFields("form");
+        Notify.error("add");
       } else {
         this.Adscrito.employe.id = this.addDataRow.id;
         AttachedResourceService.save(this.Adscrito)

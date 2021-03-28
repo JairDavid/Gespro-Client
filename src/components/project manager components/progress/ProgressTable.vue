@@ -30,6 +30,17 @@
               <v-icon> mdi-eye </v-icon>
             </v-btn>
           </template>
+           <template v-slot:[`item.avances`]="{ item }">
+            <v-btn
+              rounded
+              color="blueButton"
+              width="25%"
+              dark
+              @click="verAvances(item)"
+            >
+              <v-icon>  mdi-cloud-download </v-icon>
+            </v-btn>
+          </template>
         </v-data-table>
       </div>
     </v-card>
@@ -60,6 +71,49 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    
+     <v-dialog v-model="dialog2" persistent width="800">
+      <v-card>
+        <v-card-title>
+          <v-btn
+            color="greenButton"
+            class="white--text"
+            style="margin-right: 1%"
+            rounded
+            @click="(dialog2 = false)"
+          >
+            <v-icon class="white--text">mdi-arrow-left-thick</v-icon>
+          </v-btn>
+          Avances de: {{ seeDataRow.name }}
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="searchAvance"
+            append-icon="mdi-magnify"
+            label="Buscar"
+            color="red"
+            single-line
+            hide-details
+          ></v-text-field>
+        </v-card-title>
+        <v-data-table
+          :headers="encabezado"
+          :search="searchAvance"
+          :items="avances"
+        >
+          <template v-slot:[`item.descargar`]="{ item }">
+            <v-btn
+              rounded
+              color="blueButton"
+              dark
+              :href="`http://10.0.0.11:8080/avance/descargar/${item.id}`"
+            >
+              <v-icon> mdi-cloud-download </v-icon>
+            </v-btn>
+          </template>
+        </v-data-table>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 <script>
@@ -71,16 +125,24 @@ export default {
   data() {
     return {
       search: "",
+      searchAvance: "",
       headers: [
         { text: "Nombre del proyecto", value: "name" },
-        { text: "Nombre del responsable", value: "employe.firstName" },
+        { text: "Nombre del responsable", value: "employe.fullName" },
         { text: "Ver progreso", value: "progreso" },
+        { text: "Ver avances", value: "avances"}
+      ],
+      encabezado: [
+        { text: "Avance", aling: "center", value: "deliverableAssigment.deliverable.name" },
+        { text: "Descargar", aling: "center", value :"descargar"}
       ],
       suma: 0,
       proyects: [],
+      avances: [],
       progreso: [],
       seeDataRow: {},
       dialog: false,
+      dialog2: false,
     };
   },
   methods: {
@@ -88,16 +150,30 @@ export default {
       this.suma = 0
     },
 
-    progressSuma(){
-        this.progreso.map(item =>{
-        this.suma += item.deliverableAssigment.percent
+    // Datos en la data-table
+     verAvances(item){
+      this.seeDataRow = {}
+      this.dialog2 = true;
+      this.seeDataRow = item
+      ProgressService.searchIdProject(this.seeDataRow.id)
+      .then(response =>{
+        this.avances = response.data
 
+      }).catch(e =>{
+        console.log(e)
       })
-      console.log(this.suma)
-
 
     },
 
+    // Suma de los porcentajes de los entregables
+    progressSuma(){
+        this.progreso.map(item =>{
+        this.suma += item.deliverableAssigment.percent
+      })
+    },
+
+
+    // Obtener todos los porcentajes dependiendo del "id" del proyecto
     getAllProgress(id){
       ProgressService.searchIdProject(id)
       .then(response =>{
@@ -128,7 +204,6 @@ export default {
       this.seeDataRow = item;
       id = this.seeDataRow.id
       this.getAllProgress(id)
-      console.log(id)
     },
   },
 
