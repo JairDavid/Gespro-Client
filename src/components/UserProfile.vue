@@ -12,7 +12,7 @@
         <v-col cols="12" sm="7">
           <h6 class="font-weight-bold text-h6 mb-2">Datos de usuario</h6>
           <v-row no-gutters>
-            <v-col cols="12" sm="12">
+            <v-col cols="12" sm="6">
               <h6 class="subtitle-1 mb-2">Nombre completo:</h6>
               <v-text-field
                 outlined
@@ -21,8 +21,17 @@
                 prepend-inner-icon="mdi-account-circle"
               ></v-text-field>
             </v-col>
-            
-            <v-col cols="12" sm="12">
+            <v-col cols="12" sm="1"></v-col>
+            <v-col cols="12" sm="5">
+              <h6 class="subtitle-1 mb-2">CURP:</h6>
+              <v-text-field
+                outlined
+                dense
+                color="#A93226"
+                prepend-inner-icon="mdi-account-box"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6">
               <h6 class="subtitle-1 mb-2">Domicilio:</h6>
               <v-text-field
                 outlined
@@ -31,6 +40,26 @@
                 prepend-inner-icon="mdi-home"
               ></v-text-field>
             </v-col>
+            <v-col cols="12" sm="1"></v-col>
+            <v-col cols="12" sm="5">
+              <h6 class="subtitle-1 mb-2">Último grado de estudios:</h6>
+              <v-text-field
+                outlined
+                dense
+                color="#A93226"
+                prepend-inner-icon="mdi-school"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="6">
+              <h6 class="subtitle-1 mb-2">Teléfono:</h6>
+              <v-text-field
+                outlined
+                dense
+                color="#A93226"
+                prepend-inner-icon="mdi-phone"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="1"></v-col>
             <v-col cols="12" sm="5">
               <h6 class="subtitle-1 mb-2">Fecha de nacimiento:</h6>
               <v-text-field
@@ -42,27 +71,7 @@
                 prepend-inner-icon="mdi-calendar"
               ></v-text-field>
             </v-col>
-            <v-col cols="12" sm="1"></v-col>
-            <v-col cols="12" sm="6">
-              <h6 class="subtitle-1 mb-2">Teléfono:</h6>
-              <v-text-field
-                outlined
-                dense
-                color="#A93226"
-                prepend-inner-icon="mdi-phone"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="5">
-              <h6 class="subtitle-1 mb-2">Rol:</h6>
-              <v-text-field
-                outlined
-                disabled
-                dense
-                color="#A93226"
-                prepend-inner-icon="mdi-account-supervisor"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="1"></v-col>
+
             <v-col cols="12" sm="6">
               <h6 class="subtitle-1 mb-2">Correo electrónico:</h6>
               <v-text-field
@@ -71,6 +80,17 @@
                 disabled
                 color="#A93226"
                 prepend-inner-icon="mdi-email"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" sm="1"></v-col>
+            <v-col cols="12" sm="5">
+              <h6 class="subtitle-1 mb-2">Rol:</h6>
+              <v-text-field
+                outlined
+                disabled
+                dense
+                color="#A93226"
+                prepend-inner-icon="mdi-account-supervisor"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -113,6 +133,6 @@
 
 <script>
 export default {
-  name: "UserProfile"
+  name: "UserProfile",
 };
 </script>
