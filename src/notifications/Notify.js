@@ -14,6 +14,9 @@ class Notify {
             case 'forceToSearch':
                 text = 'Primero debes buscar un proyecto.'
                 break;
+            case 'valid-project':
+                text = 'El nombre del proyecto debe de ser único.'
+                break;
         }
         return Vue.$toast.warning(text, {
             position: "bottom-right",

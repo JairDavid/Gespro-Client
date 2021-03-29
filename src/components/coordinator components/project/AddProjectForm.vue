@@ -151,26 +151,36 @@ export default {
         this.project.type.id === ""
       ) {
         //Advertencia
-        Notify.fillFields("form")
+        Notify.fillFields("form");
       } else {
-        //Petición para guardar el proyecto
-        CoordinatorService.save(this.project)
+        CoordinatorService.searchByName(this.project.name)
           .then((response) => {
-            this.project.id = null;
-            this.project.name = "";
-            this.project.duration = "";
-            this.project.description = "";
-            this.project.clientName = "";
-            this.project.date = "";
-            this.project.cost = "";
-            this.project.employe.id = 0;
-            this.project.type.id = 0;
-            //Toast de hecho
-            Notify.done("project");
+            if (response.data.name === undefined) {
+              //Petición para guardar el proyecto
+              CoordinatorService.save(this.project)
+                .then((response) => {
+                  this.project.id = null;
+                  this.project.name = "";
+                  this.project.duration = "";
+                  this.project.description = "";
+                  this.project.clientName = "";
+                  this.project.date = "";
+                  this.project.cost = "";
+                  this.project.employe.id = 0;
+                  this.project.type.id = 0;
+                  //Toast de hecho
+                  Notify.done("project");
+                })
+                .catch((e) => {
+                  //Toast de error al guardar
+                  Notify.error("saveData");
+                  console.log(e);
+                });
+            } else {
+              Notify.fillFields("valid-project");
+            }
           })
           .catch((e) => {
-            //Toast de error al guardar
-            Notify.error("saveData");
             console.log(e);
           });
       }
