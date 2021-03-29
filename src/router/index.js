@@ -78,7 +78,7 @@ const routes = [
   },
   {
     path: '/fillType',
-    name: 'entregables',
+    name: 'llenarTipo',
     component: () => import('../views/controller views/FillType.vue')
   },
   ///////////////////Human resources routes////////////////////////

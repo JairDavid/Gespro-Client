@@ -12,8 +12,8 @@ class ControllerService{
         return API.post('/guardar',obj)
     }
 
-    update(obj){
-    	return API.put('/actualizar',obj)
+    update(id,obj){
+    	return API.put(`/actualizar/${id}`,obj)
     }
 
     delete(id){

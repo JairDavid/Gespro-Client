@@ -9,12 +9,15 @@ class Notify {
                 text = 'Debes ingresar el nombre del proyecto.'
                 break;
             case 'uploadFile':
-                text = 'Debes seleccionar un archivo.'
+                text = 'Debes seleccionar un archivo o ingresar un nombre.'
                 break;
             case 'form':
                 text = 'Todos los campos son obligatorios; Excepto descripción.'
                 break;
             case 'form-phase':
+                text = 'Nombre obligatorio.'
+                break;
+            case 'form-type':
                 text = 'Nombre obligatorio.'
                 break;
             case 'valid-deliverable':
@@ -28,6 +31,9 @@ class Notify {
                 break;
             case 'valid-project':
                 text = 'El nombre del proyecto debe de ser único.'
+                break;
+            case 'valid-type':
+                text = 'El nombre del tipo de proyecto debe de ser único.'
                 break;
         }
         return Vue.$toast.warning(text, {
@@ -66,6 +72,9 @@ class Notify {
             case 'deleteProject':
                 text = 'Proyecto eliminado'
                 break;
+            case 'deleteType':
+                text = 'Tipo de proyecto eliminado'
+                break;
             case 'deletePhase':
                 text = 'Fase eliminada'
                 break;
@@ -80,6 +89,9 @@ class Notify {
                 break;
             case 'updateDeliverable':
                 text = 'Entregable actualizado'
+                break;
+            case 'updateType':
+                text = 'Tipo de proyecto actualizado'
                 break;
         }
         return Vue.$toast.success(text + ' correctamente.', {

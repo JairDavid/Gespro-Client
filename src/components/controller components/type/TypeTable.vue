@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-flex flex-row" style="margin-top: 2%; margin-bottom: 2%">
-      <AddType />
+      <AddType @reload="getAllTypes()" />
       <v-btn rounded color="blueButton" dark class="mx-2" @click="fillType()">
         <v-icon left class="white--text">mdi-plus-circle</v-icon>
         Asignar elementos
@@ -43,30 +43,30 @@
         </template>
       </v-data-table>
     </v-card>
-    <v-dialog v-model="dialog1" persistent max-width="600px">
+    <v-dialog v-model="dialog1" persistent max-width="600">
       <v-card class="rounded-lg">
         <v-card-title class="red">
-          <span class="headline" style="color: white"> Modificar Tipo </span>
+          <span class="headline" style="color: white"
+            ><v-icon color="white">mdi-pencil</v-icon> Modificar Tipo
+          </span>
         </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-text-field
-              style="margin-top: 10%"
-              color="red"
-              v-model="editDataRow.name"
-              outlined
-              label="Nombre de la fase"
-              prepend-inner-icon="mdi-ballot"
-            ></v-text-field>
-          </v-container>
+        <v-card-text class="mt-5">
+          <v-text-field
+            color="red"
+            v-model="editDataRow.name"
+            outlined
+            label="Nombre de la fase"
+            prepend-inner-icon="mdi-ballot"
+          ></v-text-field>
         </v-card-text>
+        <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
             elevation="2"
             color="blue-grey darken-1"
             text
-            @click="dialog1 = false"
+            @click="(dialog1 = false), getAllTypes()"
           >
             Cancelar
           </v-btn>
@@ -74,7 +74,7 @@
             elevation="2"
             color="green darken-1"
             text
-            @click="dialog1 = false"
+            @click="modifyType()"
           >
             Guardar cambios
           </v-btn>
@@ -85,7 +85,9 @@
     <v-dialog v-model="dialog2" persistent max-width="600px">
       <v-card class="rounded-lg">
         <v-card-title class="red">
-          <span class="headline" style="color: white"> Eliminar Tipo </span>
+          <span class="headline" style="color: white"
+            ><v-icon color="white">mdi-delete</v-icon> Eliminar Tipo
+          </span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -109,7 +111,7 @@
             elevation="2"
             color="green darken-1"
             text
-            @click="dialog2 = false"
+            @click="deleteType()"
           >
             Eliminar
           </v-btn>
@@ -122,6 +124,7 @@
 import TypePhaseTable from "./TypePhaseTable";
 import AddType from "./AddType";
 import ControllerService from "../../../services/controller/service/ControllerService";
+import Notify from "../../../notifications/Notify";
 export default {
   name: "TypeTable",
   components: {
@@ -153,22 +156,43 @@ export default {
       this.deleteDataRow = item;
       this.dialog2 = true;
     },
-    getAllTypes() {
-      ControllerService.listAll()
+    deleteType() {
+      ControllerService.delete(this.deleteDataRow.id)
         .then((response) => {
-          this.item=response.data;
+          Notify.done("deleteType");
+          this.dialog2 = false;
+          this.getAllTypes();
         })
         .catch((e) => {
           console.log(e);
-
+        });
+    },
+    modifyType() {
+      ControllerService.update(this.editDataRow.id, this.editDataRow)
+        .then((response) => {
+          Notify.done("updateType");
+          this.dialog1 = false;
+          this.getAllTypes();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    getAllTypes() {
+      ControllerService.listAll()
+        .then((response) => {
+          this.item = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
         });
     },
     fillType() {
       this.$router.replace("/fillType");
     },
   },
-  mounted(){
+  mounted() {
     this.getAllTypes();
-  }
+  },
 };
 </script>

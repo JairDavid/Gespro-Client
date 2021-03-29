@@ -2,7 +2,7 @@
   <div class="text-center">
     <v-dialog v-model="dialog" width="600">
       <template v-slot:activator="{ on, attrs }">
-        <v-btn rounded class="blueButton" dark v-bind="attrs" v-on="on">
+        <v-btn rounded class="blueButton" dark v-bind="attrs" v-on="on" @click="getAllPhases()">
           <v-icon class="white--text">mdi-eye</v-icon>
         </v-btn>
       </template>
@@ -30,7 +30,7 @@
         </v-card-title>
         <v-data-table
           :headers="encabezado"
-          :items="tipos"
+          :items="phase"
           :search="search"
           :items-per-page="5"
         >
@@ -40,6 +40,7 @@
   </div>
 </template>
 <script>
+import TypePhaseService from "../../../services/controller/service/TypePhaseService";
 export default {
   name: "TypePhaseTable",
   props: {
@@ -49,19 +50,22 @@ export default {
     return {
       search: "",
       encabezado: [
-        { text: "Nombre de la fase", align: "start", value: "name" },
+        { text: "Nombre de la fase", align: "start", value: "phase.name" },
       ],
-      tipos: [
-        { name: "Fase planeación" },
-        { name: "Fase inicio" },
-        { name: "Fase documentación" },
-        { name: "Fase contratación" },
-        { name: "Fase construcción" },
-        { name: "Fase evaluación" },
-      ],
+      phase: [],
       dialog: false,
     };
   },
-  methods: {},
+  methods: {
+    getAllPhases(){
+      TypePhaseService.getType(this.dataExtern.id)
+      .then((response)=>{
+        this.phase=response.data;
+      })
+      .catch((e)=>{
+        console.log(e);
+      })
+    }
+  },
 };
 </script>

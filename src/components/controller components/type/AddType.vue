@@ -19,6 +19,7 @@
           outlined
           label="Nombre del tipo "
           prepend-inner-icon="mdi-ballot"
+          v-model="type.name"
         ></v-text-field>
       </v-card-text>
       <v-divider></v-divider>
@@ -32,12 +33,7 @@
         >
           Cancelar
         </v-btn>
-        <v-btn
-          elevation="2"
-          color="green darken-1"
-          text
-          @click="dialog = false"
-        >
+        <v-btn elevation="2" color="green darken-1" text @click="saveType()">
           Guardar
         </v-btn>
       </v-card-actions>
@@ -45,7 +41,7 @@
   </v-dialog>
 </template>
 <script>
-import Notify from '../../../notifications/Notify';
+import Notify from "../../../notifications/Notify";
 import ControllerService from "../../../services/controller/service/ControllerService";
 export default {
   name: "",
@@ -61,10 +57,23 @@ export default {
   methods: {
     saveType() {
       if (this.type.name === "") {
-        Notify.fillFields("");
+        Notify.fillFields("form-type");
       } else {
-        ControllerService.save(this.type);
+        ControllerService.save(this.type)
+          .then((response) => {
+            Notify.done("type");
+            this.dialog = false;
+            this.type.name = "";
+            this.reload();
+          })
+          .catch((e) => {
+            console.log(e);
+            Notify.error("saveData");
+          });
       }
+    },
+    reload() {
+      this.$emit("reload");
     },
   },
 };
