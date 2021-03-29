@@ -48,7 +48,7 @@ export default {
       search: "",
       encabezado: [
         { text: "Nombre de proyecto", align: "start", value: "project.name" },
-        { text: "Lider del proyecto", align: "start", value: "project.employe.firstName" },
+        { text: "Lider del proyecto", align: "start", value: "project.employe.fullName" },
         { text: "Ver entregables", align: "center", value: "button" },
       ],
       projects: [
