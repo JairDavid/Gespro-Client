@@ -1,4 +1,4 @@
-import API from './ApiType'
+import API from '../api/ApiType'
 
 class ControllerService{
     listAll(){
