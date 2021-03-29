@@ -201,7 +201,7 @@ export default {
 
       for (let j = 0; j < this.idProjects.length; j++) {
         if (this.Adscrito.project.id === this.idProjects[j]) {
-          Notify.error("anotherAdd")
+          Notify.fillFields("anotherAdd")
           flag = true;
         }
       }
@@ -226,10 +226,10 @@ export default {
       if (
         this.Adscrito.id === "" ||
         this.Adscrito.employe.id === "" ||
-        this.Adscrito.project.id === "" ||
-        this.Adscrito.labor.id === ""
+        this.Adscrito.project.id < 1 ||
+        this.Adscrito.labor.id < 1
       ) {
-        Notify.error("add");
+        Notify.fillFields("adscrito");
       } else {
         this.Adscrito.employe.id = this.addDataRow.id;
         AttachedResourceService.save(this.Adscrito)
@@ -237,11 +237,11 @@ export default {
             (this.Adscrito.id = null),
               (this.Adscrito.employe.id = 0),
               (this.Adscrito.project.id = 0),
+              (this.Adscrito.labor.id = 0)
               Notify.done("project");
           })
           .catch((e) => {
             console.log(e);
-            Notify.error("saveData");
           });
       }
     },
