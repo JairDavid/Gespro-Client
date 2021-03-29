@@ -46,7 +46,7 @@
 </template>
 <script>
 import Notify from '../../../notifications/Notify';
-import ControllerService from "../../../services/controller/ControllerService";
+import ControllerService from "../../../services/controller/service/ControllerService";
 export default {
   name: "",
   data() {

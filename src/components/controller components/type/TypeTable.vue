@@ -121,7 +121,7 @@
 <script>
 import TypePhaseTable from "./TypePhaseTable";
 import AddType from "./AddType";
-import ControllerService from "../../../services/controller/ControllerService";
+import ControllerService from "../../../services/controller/service/ControllerService";
 export default {
   name: "TypeTable",
   components: {
@@ -160,7 +160,7 @@ export default {
         })
         .catch((e) => {
           console.log(e);
-          
+
         });
     },
     fillType() {
