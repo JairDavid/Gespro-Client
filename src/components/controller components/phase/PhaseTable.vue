@@ -99,7 +99,7 @@
             elevation="2"
             color="blue-grey darken-1"
             text
-            @click="dialog1 = false"
+            @click="dialog1 = false, getAllPhases()"
           >
             Cancelar
           </v-btn>
@@ -175,7 +175,11 @@ export default {
       ],
 
       encabezadoTipo: [
-        { text: "Nombre del tipo de proyecto", align: "start", value: "type.name" },
+        {
+          text: "Nombre del tipo de proyecto",
+          align: "start",
+          value: "type.name",
+        },
       ],
       //Lista de objetos que vienen de la API
       item: [],
@@ -223,18 +227,24 @@ export default {
         Notify.fillFields("form-phase");
       } else {
         //Petición para guardar el proyecto
-        PhaseService.update(this.editDataRow, this.editDataRow.id)
-          .then((response) => {
-            //Toast de hecho
-            Notify.done("updatePhase");
-            this.dialog1 = false;
-            this.getAllPhases();
-          })
-          .catch((e) => {
-            //Toast de error al guardar
-            Notify.error("saveData");
-            console.log(e);
-          });
+        PhaseService.existName(this.editDataRow.name).then((response) => {
+          if (response.data === true) {
+            Notify.fillFields("valid-phase");
+          } else {
+            PhaseService.update(this.editDataRow, this.editDataRow.id)
+              .then((response) => {
+                //Toast de hecho
+                Notify.done("updatePhase");
+                this.dialog1 = false;
+                this.getAllPhases();
+              })
+              .catch((e) => {
+                //Toast de error al guardar
+                Notify.error("saveData");
+                console.log(e);
+              });
+          }
+        });
       }
     },
     getAllPhases() {

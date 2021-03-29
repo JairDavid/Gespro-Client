@@ -8,6 +8,10 @@ class DeliverableService{
         return API.get(`/consultaUnica/${id}`)
     }
 
+    existName(name){
+        return API.get(`/consultaNombre/${name}`)
+    }
+
     save(obj){
         return API.post('/guardar',obj)
     }

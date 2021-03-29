@@ -68,7 +68,7 @@
             elevation="2"
             color="blue-grey darken-1"
             text
-            @click="dialog1 = false"
+            @click="(dialog1 = false), getAllDeliverables()"
           >
             Cancelar
           </v-btn>
@@ -184,29 +184,33 @@ export default {
         Notify.fillFields("form-phase");
       } else {
         if (!this.currentFile) {
-          //Notify.fillFields("uploadFile");
-          console.log(this.editDataRow.name);
-          DeliverableService.updateName(
-            this.editDataRow.id,
-            this.editDataRow.name
-          )
-            .then((response) => {
-              Notify.done("updateDeliverable");
-              this.currentFile = undefined;
-              this.editDataRow.name = "";
-              this.getAllDeliverables();
-              this.dialog1 = false;
-            })
-            .catch((e) => {
-              console.log(e);
-              Notify.error("saveData");
-            });
+          DeliverableService.existName(this.editDataRow.name).then(
+            (response) => {
+              if (response.data === true) {
+                Notify.fillFields("valid-deliverable");
+              } else {
+                DeliverableService.updateName(
+                  this.editDataRow.id,
+                  this.editDataRow.name
+                )
+                  .then((response) => {
+                    Notify.done("updateDeliverable");
+                    this.currentFile = undefined;
+                    this.editDataRow.name = "";
+                    this.getAllDeliverables();
+                    this.dialog1 = false;
+                  })
+                  .catch((e) => {
+                    console.log(e);
+                    Notify.error("saveData");
+                  });
+              }
+            }
+          );
         } else {
           const formData = new FormData();
           formData.append(`json`, `{"name":"${this.editDataRow.name}"}`);
-
           formData.append("archivo", this.currentFile);
-
           DeliverableService.update(formData, this.editDataRow.id)
             .then((response) => {
               Notify.done("updateDeliverable");

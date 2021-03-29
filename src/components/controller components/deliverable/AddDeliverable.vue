@@ -40,12 +40,7 @@
         >
           Cancelar
         </v-btn>
-        <v-btn
-          elevation="2"
-          color="green darken-1"
-          text
-          @click="upload()"
-        >
+        <v-btn elevation="2" color="green darken-1" text @click="upload()">
           Guardar
         </v-btn>
       </v-card-actions>
@@ -72,35 +67,38 @@ export default {
       if (!this.currentFile || this.deliverable.name === "") {
         Notify.fillFields("uploadFile");
       } else {
-        const formData = new FormData();
-        formData.append(
-          `json`, `{"name":"${this.deliverable.name}"}`
-        );
-
-        formData.append(
-          "archivo" , this.currentFile
-        );
-
-        DeliverableService.save(formData)
-        .then((response) => {
-          Notify.done("deliverable");
-          this.currentFile = undefined;
-          this.charge();
-          this.dialog = false;
-        }).catch ((e) => {
-          console.log(e)
-          Notify.error("saveData");
-        })
-
+        DeliverableService.existName(this.deliverable.name)
+          .then((response) => {
+            if (response.data===true) {
+              Notify.fillFields("valid-deliverable");
+            } else {
+              const formData = new FormData();
+              formData.append(`json`, `{"name":"${this.deliverable.name}"}`);
+              formData.append("archivo", this.currentFile);
+              DeliverableService.save(formData)
+                .then((response) => {
+                  Notify.done("deliverable");
+                  this.currentFile = undefined;
+                  this.charge();
+                  this.dialog = false;
+                })
+                .catch((e) => {
+                  console.log(e);
+                  Notify.error("saveData");
+                });
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+          });
       }
-
     },
     getFile(e) {
       this.currentFile = e;
     },
-    charge(){
+    charge() {
       this.$emit("charge");
-    }
+    },
   },
 };
 </script>

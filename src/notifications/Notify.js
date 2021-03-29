@@ -17,6 +17,12 @@ class Notify {
             case 'form-phase':
                 text = 'Nombre obligatorio.'
                 break;
+            case 'valid-deliverable':
+                text = 'El nombre del entregable debe ser único.'
+                break;
+            case 'valid-phase':
+                text = 'El nombre de la fase debe ser único.'
+                break;
             case 'forceToSearch':
                 text = 'Primero debes buscar un proyecto.'
                 break;
@@ -67,7 +73,7 @@ class Notify {
                 text = 'Proyecto actualizado'
                 break;
             case 'updatePhase':
-                text = 'Fase actualizado'
+                text = 'Fase actualizada'
                 break;
             case 'updateDeliverable':
                 text = 'Entregable actualizado'

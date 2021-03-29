@@ -63,25 +63,35 @@ export default {
         Notify.fillFields("form-phase");
       } else {
         //Petición para guardar el proyecto
-        PhaseService.save(this.phase)
+        PhaseService.existName(this.phase.name)
           .then((response) => {
-            this.phase.id = null;
-            this.phase.name = "";
-            //Toast de hecho
-            Notify.done("phase");
-            this.dialog = false;
-            this.reload();
+            if (response.data === true) {
+              Notify.fillFields("valid-phase");
+            } else {
+              PhaseService.save(this.phase)
+                .then((response) => {
+                  this.phase.id = null;
+                  this.phase.name = "";
+                  //Toast de hecho
+                  Notify.done("phase");
+                  this.dialog = false;
+                  this.reload();
+                })
+                .catch((e) => {
+                  //Toast de error al guardar
+                  Notify.error("saveData");
+                  console.log(e);
+                });
+            }
           })
           .catch((e) => {
-            //Toast de error al guardar
-            Notify.error("saveData");
             console.log(e);
           });
       }
     },
-    reload(){
-      this.$emit("charge")
-    }
+    reload() {
+      this.$emit("charge");
+    },
   },
 };
 </script>
