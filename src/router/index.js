@@ -71,6 +71,16 @@ const routes = [
     name: 'entregables',
     component: () => import('../views/controller views/Deliverable.vue')
   },
+  {
+    path: '/type',
+    name: 'tipos',
+    component: () => import('../views/controller views/Type.vue')
+  },
+  {
+    path: '/fillType',
+    name: 'entregables',
+    component: () => import('../views/controller views/FillType.vue')
+  },
   ///////////////////Human resources routes////////////////////////
   {
     path: '/homeHumanResources',
