@@ -54,14 +54,14 @@
         </v-card-title>
         <v-card-text class="mt-5">
           <span class="black--text"
-            >Progreso total: {{ this.suma }}%</span
+            >Progreso total: {{ this.progresoTotal }}%</span
           >
           <v-progress-linear
             color="teal"
             height="10"
             buffer-value="100"
             class="mt-2"
-            :value="this.suma"
+            :value="this.progresoTotal"
           ></v-progress-linear>
         </v-card-text>
         <v-card-actions>
@@ -136,7 +136,7 @@ export default {
         { text: "Avance", aling: "center", value: "deliverableAssigment.deliverable.name" },
         { text: "Descargar", aling: "center", value :"descargar"}
       ],
-      suma: 0,
+      progresoTotal: 0,
       proyects: [],
       avances: [],
       progreso: [],
@@ -147,7 +147,7 @@ export default {
   },
   methods: {
     limpiar(){
-      this.suma = 0
+      this.progresoTotal = 0
     },
 
     // Datos en la data-table
@@ -168,7 +168,7 @@ export default {
     // Suma de los porcentajes de los entregables
     progressSuma(){
         this.progreso.map(item =>{
-        this.suma += item.deliverableAssigment.percent
+        this.progresoTotal += item.deliverableAssigment.percent
       })
     },
 

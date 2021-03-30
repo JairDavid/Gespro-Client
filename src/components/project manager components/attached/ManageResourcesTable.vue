@@ -190,60 +190,59 @@ export default {
       this.addDataRow = item;
       this.getAllProjectsAdscrito(item.id);
     },
-    // valido si ya se encuentra el empleado registrado en el proyecto
+    // valido si ya se encuentra el empleado registrado en el proyecto y que todos los campos esten llenos
     validar() {
       let add = false;
       let flag = false;
 
-      this.adscritoProyects.map((item, i) => {
-        this.idProjects[i] = item.project.id;
-      });
 
-      for (let j = 0; j < this.idProjects.length; j++) {
-        if (this.Adscrito.project.id === this.idProjects[j]) {
-          Notify.fillFields("anotherAdd")
-          flag = true;
-        }
-      }
-
-      if (flag === true) {
-        add = false;
-        this.idProjects = [];
-
-      } else {
-        add = true;
-        this.idProjects = []
-      }
-
-      if (add === true) {
-        this.addAdscrito();
-        this.idProjects = [];
-      }
-    },
-
-    // Añadir adscrito
-    addAdscrito() {
       if (
-        this.Adscrito.id === "" ||
-        this.Adscrito.employe.id === "" ||
         this.Adscrito.project.id < 1 ||
         this.Adscrito.labor.id < 1
       ) {
         Notify.fillFields("adscrito");
       } else {
-        this.Adscrito.employe.id = this.addDataRow.id;
-        AttachedResourceService.save(this.Adscrito)
-          .then((response) => {
-            (this.Adscrito.id = null),
-              (this.Adscrito.employe.id = 0),
-              (this.Adscrito.project.id = 0),
-              (this.Adscrito.labor.id = 0)
-              Notify.done("project");
-          })
-          .catch((e) => {
-            console.log(e);
-          });
+        
+      this.adscritoProyects.map((item, i) => {
+        this.idProjects[i] = item.project.id;
+      });
+
+        for (let j = 0; j < this.idProjects.length; j++) {
+          if (this.Adscrito.project.id === this.idProjects[j]) {
+            Notify.fillFields("anotherAdd");
+            flag = true;
+          }
+        }
+
+        if (flag === true) {
+          add = false;
+          this.idProjects = [];
+        } else {
+          add = true;
+          this.idProjects = [];
+        }
+
+        if (add === true) {
+          this.addAdscrito();
+          this.idProjects = [];
+        }
       }
+    },
+
+    // Añadir adscrito
+    addAdscrito() {
+      this.Adscrito.employe.id = this.addDataRow.id;
+      AttachedResourceService.save(this.Adscrito)
+        .then((response) => {
+          (this.Adscrito.id = null),
+            (this.Adscrito.employe.id = 0),
+            (this.Adscrito.project.id = 0),
+            (this.Adscrito.labor.id = 0);
+          Notify.done("project");
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
   },
 
