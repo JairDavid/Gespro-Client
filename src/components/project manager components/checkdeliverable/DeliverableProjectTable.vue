@@ -65,7 +65,7 @@
               rounded
               color="blueButton"
               dark
-              :href="`http://10.0.0.11:8080/entregable/descargar/${item.deliverable.id}`"
+              :href="`http://localhost:8080/entregable/descargar/${item.deliverable.id}`"
               
             >
               <v-icon> mdi-cloud-download </v-icon>

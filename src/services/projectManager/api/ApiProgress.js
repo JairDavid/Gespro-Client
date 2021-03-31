@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export default axios.create({
-    baseURL: "http://10.0.0.11:8080/avance",
+    baseURL: "http://localhost:8080/avance",
     headers:{
         "Content-type": "application/json"
     }
