@@ -10,9 +10,14 @@
         </div>
         <h3>Asignación de fases y entregables</h3>
       </v-col>
+      <v-spacer></v-spacer>
+      <v-col cols="12" sm="12" md="12">
+        <h2>Porcentaje total: {{ this.acum }}%</h2>
+      </v-col>
     </v-row>
     <v-row class="mt-6">
       <v-select
+        class="mb-2"
         outlined
         dense
         color="red"
@@ -23,15 +28,22 @@
         item-value="id"
         prepend-inner-icon="mdi-clipboard-text"
       ></v-select>
-      <v-btn rounded color="blueButton" dark class="mx-3" @click="open()">
+      <v-btn
+        rounded
+        color="blueButton"
+        dark
+        class="mx-3 mb-2"
+        @click="open()"
+        width="240"
+      >
         <v-icon left class="white--text">mdi-plus-circle</v-icon>
         Agregar contenido
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn color="red" rounded class="mx-2" @click="showConfirm()">
+      <v-btn color="red" rounded class="mx-2 mb-2" @click="showConfirm()">
         <span class="white--text">Finalizar</span>
       </v-btn>
-      <v-btn color="gray" rounded class="mx-3">
+      <v-btn color="gray" rounded class="mx-2 mb-2" @click="cancel()">
         <span class="black--text">Cancelar</span>
       </v-btn>
     </v-row>
@@ -49,7 +61,7 @@
               <v-icon
                 class="mx-5"
                 color="white"
-                @click.native.stop="deletePhase(i)"
+                @click.native.stop="deletePhase(i, fases)"
               >
                 mdi-minus</v-icon
               >
@@ -95,7 +107,7 @@
           >
             Cancelar
           </v-btn>
-          <v-btn elevation="2" color="green darken-1" text @click="test()">
+          <v-btn elevation="2" color="green darken-1" text @click="saveAll()">
             Sí, Finalizar
           </v-btn>
         </v-card-actions>
@@ -143,6 +155,7 @@
                           label="Porcentaje"
                           v-model="content.percent"
                           prepend-inner-icon="mdi-percent"
+                          :rules="[rules.loanMin, rules.loanMax]"
                         >
                         </v-text-field
                       ></v-col>
@@ -232,6 +245,7 @@ import DeliverableService from "../../../services/controller/service/Deliverable
 import PhaseService from "../../../services/controller/service/PhaseService";
 import ControllerService from "../../../services/controller/service/ControllerService";
 import TypePhaseService from "../../../services/controller/service/TypePhaseService";
+import Notify from "../../../notifications/Notify";
 export default {
   name: "FillNewType",
   data() {
@@ -250,8 +264,21 @@ export default {
           value: "originalName",
         },
       ],
+      //reglas del input de tipo númerico para que no pase del rango del 1-100
+      rules: {
+        loanMin: (value) => {
+          if (value < 0) {
+            this.content.percent = 0;
+          }
+        },
+        loanMax: (value) => {
+          if (value > 100) {
+            this.content.percent = 100;
+          }
+        },
+      },
       type: {
-        id: 0,
+        id: null,
       },
       content: {
         phase: {},
@@ -269,24 +296,40 @@ export default {
       listDeliverable: [],
       dialog1: false,
       dialog2: false,
+      acum: 0,
+      bool: false,
       e1: 1,
     };
   },
   methods: {
-    deletePhase(index) {
+    deletePhase(index, extern) {
       this.allData.splice(index, 1);
+      this.acum = parseInt(this.acum) - parseInt(extern.percent);
     },
     open() {
-      this.dialog1 = true;
-      this.content.phase = {};
-      this.content.percent = 0;
-      this.content.deliverable = [];
-      this.listDeliverable = [];
-      this.e1 = 1;
+      if (this.acum >= 100) {
+        Notify.info("outOfRange");
+      } else {
+        this.dialog1 = true;
+        this.content.phase = {};
+        this.content.percent = 0;
+        this.content.deliverable = [];
+        this.listDeliverable = [];
+        this.e1 = 1;
+      }
     },
     showConfirm() {
-      this.dialog2 = true;
+      if (this.type.id === null || this.allData.length == 0) {
+        Notify.fillFields("fillContent");
+        this.dialog2 = false;
+      } else if (this.acum < 100) {
+        Notify.info("incomplete");
+        this.dialog2 = false;
+      } else {
+        this.dialog2 = true;
+      }
     },
+    //validaciones extremas :v no mover pls
     submit() {
       this.content.deliverable = this.listDeliverable;
       let contenido = {
@@ -294,12 +337,48 @@ export default {
         percent: this.content.percent,
         entregables: this.content.deliverable,
       };
-      this.allData.push(contenido);
-      console.log(this.allData);
-      this.dialog1 = false;
+      if (
+        this.content.deliverable.length == 0 ||
+        Object.entries(contenido.fase).length === 0
+      ) {
+        Notify.fillFields("stepperFields");
+      } else if (contenido.percent < 1 || contenido.percent > 100) {
+        Notify.fillFields("percentContent");
+      } else if (this.allData.length == 0) {
+        this.acum = parseInt(this.acum) + parseInt(contenido.percent);
+        this.allData.push(contenido);
+        this.dialog1 = false;
+      } else {
+        this.searchID(contenido);
+        if (this.bool === true) {
+          Notify.fillFields("samePhase");
+        } else {
+          if (this.acum + parseInt(contenido.percent) > 100) {
+            Notify.info("outPercent");
+          } else {
+            this.allData.push(contenido);
+            this.acum = parseInt(this.acum) + parseInt(contenido.percent);
+            this.dialog1 = false;
+          }
+        }
+      }
+      console.log(this.acum);
     },
-    saveAll() {},
-    test() {
+    //
+    cancel() {
+      const path = `/type`;
+      if (this.$route.path !== path) this.$router.replace(path);
+    },
+    searchID(extern) {
+      this.bool = false;
+      for (var i = 0; i < this.allData.length; i++) {
+        if (this.allData[i].fase.id === extern.fase.id) {
+          this.bool = true;
+          break;
+        }
+      }
+    },
+    saveAll() {
       this.allData.map((item, i) => {
         let fase_tipo = {
           id: null,
@@ -331,8 +410,8 @@ export default {
               };
               DeliverableAssigmentService.save(deliverableAssigment)
                 .then((response) => {
-                  alert("XD");
-                  console.log(response.data);
+                  this.dialog2 = false;
+                  this.cancel();
                 })
                 .catch((e) => {
                   console.log(e);

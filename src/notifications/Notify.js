@@ -34,11 +34,23 @@ class Notify {
       case 'valid-type':
         text = 'El nombre del tipo de proyecto debe de ser único.'
         break;
-      case "anotherAdd":
-        text = "Este empleado ya se encuentra registrado en este proyecto";
+      case 'anotherAdd':
+        text = 'Este empleado ya se encuentra registrado en este proyecto.';
         break;
-      case "adscrito":
-        text = "Seleccione todos los campos por favor";
+      case 'adscrito':
+        text = 'Debes seleccionar todos los campos.';
+        break;
+      case 'fillContent':
+        text = 'Debes seleccionar un tipo de proyecto y agregar al menos una fase.'
+        break;
+      case 'stepperFields':
+        text = 'Debes seleccionar al menos una fase y un entregable.'
+        break;
+      case 'percentContent':
+        text = 'El porcentaje por fase debe estar en un rango del 1-100.'
+        break;
+      case 'samePhase':
+        text = 'Esa fase ya ha sido seleccionada.'
         break;
     }
     return Vue.$toast.warning(text, {
@@ -159,11 +171,21 @@ class Notify {
     });
   }
   info(message) {
-    let text;
+    let text = '';
     switch (message) {
-      case "projectNotFound":
-        text = "No se encontró ningún proyecto con ese nombre.";
+      case 'outOfRange':
+        text = 'Las fases ya suman un total de 100%.';
         break;
+      case 'projectNotFound':
+        text = 'No se encontró ningún proyecto con ese nombre.';
+        break;
+      case 'outPercent':
+        text = 'El porcentaje de la fase sobrepasa el 100%.';
+        break;
+      case 'incomplete':
+        text = 'El porcentaje total no cumple con el 100%.';
+        break;
+
     }
     return Vue.$toast.info(text, {
       position: "bottom-right",
