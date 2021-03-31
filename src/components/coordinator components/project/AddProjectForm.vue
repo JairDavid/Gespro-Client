@@ -75,7 +75,7 @@
           prepend-inner-icon="mdi-clipboard-account"
           v-bind:items="employees"
           v-model="project.employe.id"
-          item-text="firstName"
+          item-text="fullName"
           item-value="id"
         ></v-select>
 
@@ -113,7 +113,7 @@
 </template>
 <script>
 import Notify from "../../../notifications/Notify";
-import ControllerService from "../../../services/controller/ControllerService";
+import ControllerService from "../../../services/controller/service/ControllerService";
 import EmployeService from "../../../services/humanResource/service/EmployeService";
 import CoordinatorService from "../../../services/coordinator/CoordinatorService";
 export default {
@@ -151,26 +151,36 @@ export default {
         this.project.type.id === ""
       ) {
         //Advertencia
-        Notify.fillFields("form")
+        Notify.fillFields("form");
       } else {
-        //Petición para guardar el proyecto
-        CoordinatorService.save(this.project)
+        CoordinatorService.searchByName(this.project.name)
           .then((response) => {
-            this.project.id = null;
-            this.project.name = "";
-            this.project.duration = "";
-            this.project.description = "";
-            this.project.clientName = "";
-            this.project.date = "";
-            this.project.cost = "";
-            this.project.employe.id = 0;
-            this.project.type.id = 0;
-            //Toast de hecho
-            Notify.done("project");
+            if (response.data.name === undefined) {
+              //Petición para guardar el proyecto
+              CoordinatorService.save(this.project)
+                .then((response) => {
+                  this.project.id = null;
+                  this.project.name = "";
+                  this.project.duration = "";
+                  this.project.description = "";
+                  this.project.clientName = "";
+                  this.project.date = "";
+                  this.project.cost = "";
+                  this.project.employe.id = 0;
+                  this.project.type.id = 0;
+                  //Toast de hecho
+                  Notify.done("project");
+                })
+                .catch((e) => {
+                  //Toast de error al guardar
+                  Notify.error("saveData");
+                  console.log(e);
+                });
+            } else {
+              Notify.fillFields("valid-project");
+            }
           })
           .catch((e) => {
-            //Toast de error al guardar
-            Notify.error("saveData");
             console.log(e);
           });
       }
