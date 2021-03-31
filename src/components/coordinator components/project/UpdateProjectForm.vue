@@ -42,6 +42,7 @@
         <h6 class="subtitle-1 mb-2">Duración estimada del proyecto (Días):</h6>
         <v-text-field
           type="number"
+          :rules="[rules.durationMin]"
           outlined
           dense
           color="red"
@@ -101,6 +102,7 @@
           outlined
           dense
           color="red"
+          :rules="[rules.costMin]"
           prepend-inner-icon="mdi-currency-usd"
           v-model="project.cost"
         ></v-text-field>
@@ -186,6 +188,19 @@ export default {
         cost: "",
         employe: { id: 0 },
         type: { id: 0 },
+      },
+      //reglas para el costo y duración
+      rules: {
+        durationMin: (value) => {
+          if (value < 1) {
+            this.project.duration= 1;
+          }
+        },
+        costMin: (value) => {
+          if (value < 1) {
+            this.project.cost= 1;
+          }
+        },
       },
       param: "",
       dialog: false,

@@ -27,6 +27,7 @@
           type="number"
           outlined
           dense
+          :rules="[rules.durationMin]"
           color="red"
           prepend-inner-icon="mdi-clock"
           v-model="project.duration"
@@ -84,6 +85,7 @@
           type="number"
           outlined
           dense
+          :rules="[rules.costMin]"
           color="red"
           prepend-inner-icon="mdi-currency-usd"
           v-model="project.cost"
@@ -131,6 +133,19 @@ export default {
         cost: "",
         employe: { id: 0 },
         type: { id: 0 },
+      },
+      //reglas para el costo y duración
+      rules: {
+        durationMin: (value) => {
+          if (value < 1) {
+            this.project.duration= 1;
+          }
+        },
+        costMin: (value) => {
+          if (value < 1) {
+            this.project.cost= 1;
+          }
+        },
       },
       //Arreglos que se llenan con la API
       projectTypes: [],
