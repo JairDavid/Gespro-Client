@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="d-flex flex-row" style="margin-top: 2%; margin-bottom: 2%">
+      <!-- se manda el método getAllDeliverables a la vita de añadir-->
       <AddDeliverable @charge="getAllDeliverables" />
     </div>
     <v-card>
@@ -142,23 +143,32 @@ export default {
       deleteDataRow: {},
       dialog1: false,
       dialog2: false,
+
+      //donde se guardará el archivo
       currentFile: undefined,
+      //para comparar el cambio
+      nameOriginal: "",
     };
   },
   methods: {
+    //se extrae el item a editar de la datatable
     editar(item) {
+      this.nameOriginal = item.name;
       this.editDataRow = item;
       this.dialog1 = true;
     },
+    //se extrae el item a eliminar de la datatable
     eliminar(item) {
       this.deleteDataRow = item;
       this.dialog2 = true;
     },
+    //método de eliminación al confirmar
     deleteDeliverable() {
       DeliverableService.delete(this.deleteDataRow.id)
         .then((response) => {
           //Toast de hecho
           Notify.done("deleteDeliverabla");
+          //Se manda a recargar la lista
           this.getAllDeliverables();
           this.dialog2 = false;
         })
@@ -171,6 +181,7 @@ export default {
     getAllDeliverables() {
       DeliverableService.listAll()
         .then((response) => {
+          //llenado de la lista con los datos de la petición
           this.item = response.data;
         })
         .catch((e) => {
@@ -179,50 +190,106 @@ export default {
           Notify.error("getData");
         });
     },
+
+    //método de modificar al confirmar
     upload() {
+      //verificación de que el nombre no esté vacío
       if (this.editDataRow.name === "") {
+        //mensaje de advertencia para que lo llene
         Notify.fillFields("form-phase");
       } else {
         if (!this.currentFile) {
+          //si el archivo no ha sido seleccionado (para solo actualizar el nombre)
           DeliverableService.existName(this.editDataRow.name).then(
+            //se valida que el nombre no sea repetido
             (response) => {
               if (response.data === true) {
+                //mensaje de advertencia del nombre
                 Notify.fillFields("valid-deliverable");
               } else {
+                //actualización al enviar la petición al API
                 DeliverableService.updateName(
                   this.editDataRow.id,
                   this.editDataRow.name
                 )
                   .then((response) => {
                     Notify.done("updateDeliverable");
+                    //limpieza de inputs
                     this.currentFile = undefined;
                     this.editDataRow.name = "";
+                    //recargar la lista
                     this.getAllDeliverables();
                     this.dialog1 = false;
                   })
                   .catch((e) => {
                     console.log(e);
-                    Notify.error("saveData");
+                    Notify.error("saveData"); //mensaje de error al guardar
                   });
               }
             }
           );
         } else {
-          const formData = new FormData();
-          formData.append(`json`, `{"name":"${this.editDataRow.name}"}`);
-          formData.append("archivo", this.currentFile);
-          DeliverableService.update(formData, this.editDataRow.id)
-            .then((response) => {
-              Notify.done("updateDeliverable");
-              this.currentFile = undefined;
-              this.editDataRow.name = "";
-              this.getAllDeliverables();
-              this.dialog1 = false;
-            })
-            .catch((e) => {
-              console.log(e);
-              Notify.error("saveData");
-            });
+          //en caso de que se desee actualizar el archivo y nombre
+
+          //se compara que el nombre se haya modificado
+          if (this.editDataRow.name != this.nameOriginal) {
+            //se verifica que no exista
+            DeliverableService.existName(this.editDataRow.name)
+              .then((response) => {
+                if (response.data === true) {
+                  //mensaje de advertencia del nombre
+                  Notify.fillFields("valid-deliverable");
+                } else {
+                  //si el nombre no está repetido se guardan los datos
+                  const formData = new FormData();
+                  formData.append(
+                    `json`,
+                    `{"name":"${this.editDataRow.name}"}`
+                  );
+                  formData.append("archivo", this.currentFile);
+                  DeliverableService.update(formData, this.editDataRow.id)
+                    .then((response) => {
+                      Notify.done("updateDeliverable");
+
+                      //limpieza de inputs
+                      this.currentFile = undefined;
+                      this.editDataRow.name = "";
+
+                      //recargar la lista
+                      this.getAllDeliverables();
+                      this.dialog1 = false;
+                    })
+                    .catch((e) => {
+                      console.log(e);
+                      Notify.error("saveData"); //mensaje de error al guardar
+                    });
+                }
+              })
+              .catch((e) => {
+                console.log(e);
+              });
+          } else {
+            //en caso de que solo se quiera catualizar el archivo
+            const formData = new FormData();
+            formData.append(`json`, `{"name":"${this.editDataRow.name}"}`);
+            formData.append("archivo", this.currentFile);
+            DeliverableService.update(formData, this.editDataRow.id)
+              .then((response) => {
+                Notify.done("updateDeliverable");
+
+                //limpieza de inputs
+                this.currentFile = undefined;
+                this.editDataRow.name = "";
+
+                //recargar la lista
+                this.getAllDeliverables();
+                this.dialog1 = false;
+              })
+              .catch((e) => {
+                console.log(e);
+                Notify.error("saveData"); //mensaje de error al guardar
+              });
+          }
         }
       }
     },
@@ -231,6 +298,7 @@ export default {
     },
   },
   mounted() {
+    //llenado al cargar la vista
     this.getAllDeliverables();
   },
 };

@@ -47,7 +47,7 @@ export default {
   data() {
     return {
       phase: {
-        id: null, //verificar que no mande errores a la API
+        id: null, 
         name: "",
       },
       dialog: false,
@@ -60,12 +60,13 @@ export default {
         //Advertencia
         Notify.fillFields("form-phase");
       } else {
-        //Petición para guardar el proyecto
+        //se valida que el nombre sea único
         PhaseService.existName(this.phase.name)
           .then((response) => {
             if (response.data === true) {
               Notify.fillFields("valid-phase");
             } else {
+              //Petición para guardar el proyecto
               PhaseService.save(this.phase)
                 .then((response) => {
                   this.phase.id = null;
@@ -88,6 +89,7 @@ export default {
       }
     },
     reload() {
+      //se recibe el método de getAllPhases con ekl nombre de charge
       this.$emit("charge");
     },
   },

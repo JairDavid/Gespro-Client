@@ -55,32 +55,41 @@ export default {
   name: "AddDeliverable",
   data() {
     return {
+      //objeto
       deliverable: {
         id: null,
         name: "",
       },
       dialog: false,
+
+      //donde se guardará el archivo
       currentFile: undefined,
     };
   },
   methods: {
     upload() {
+      //validación: si el archivo no tiene contenido (no ha sido seleccionado) o si el nombre está vacío
+      //se manda un mensaje para que se llenen
       if (!this.currentFile || this.deliverable.name === "") {
         Notify.fillFields("uploadFile");
       } else {
+        //se valida que el nombre no sea repetido (petición en API)
         DeliverableService.existName(this.deliverable.name)
           .then((response) => {
             if (response.data===true) {
-              Notify.fillFields("valid-deliverable");
+              Notify.fillFields("valid-deliverable"); //mensaje de que el nombre ya esxiste
             } else {
               const formData = new FormData();
-              formData.append(`json`, `{"name":"${this.deliverable.name}"}`);
-              formData.append("archivo", this.currentFile);
+              formData.append(`json`, `{"name":"${this.deliverable.name}"}`); //se agrega el json
+              formData.append("archivo", this.currentFile); //se agrega el archivo
               DeliverableService.save(formData)
                 .then((response) => {
                   Notify.done("deliverable");
+                  //limpieza de inputs
                   this.currentFile = undefined;
                   this.deliverable.name = "";
+
+                  //se manda a renderizar nuevamente la lista del $emit
                   this.charge();
                   this.dialog = false;
                 })
@@ -99,6 +108,8 @@ export default {
       this.currentFile = e;
     },
     charge() {
+      //se recibe el método de la vista que llama al componente
+      //se recibe con el nombre charge
       this.$emit("charge");
     },
   },

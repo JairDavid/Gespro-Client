@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="d-flex flex-row" style="margin-top: 2%; margin-bottom: 2%">
+      <!-- se manda el método getAllPhases a la vita de añadir-->
       <AddPhase @charge="getAllPhases" />
     </div>
     <v-card>
@@ -173,7 +174,7 @@ export default {
         { text: "Modificar", align: "center", value: "editar" },
         { text: "Eliminar", align: "center", value: "eliminar" },
       ],
-
+      //header de la subtable de ver tipos asiganados
       encabezadoTipo: [
         {
           text: "Nombre del tipo de proyecto",
@@ -188,6 +189,7 @@ export default {
       editDataRow: {},
       showDataRow: {},
       deleteDataRow: {},
+
       dialog1: false,
       dialog2: false,
       dialog3: false,
@@ -195,18 +197,23 @@ export default {
   },
   methods: {
     editar(item) {
+      //se extrae el item a editar de la datatable
       this.editDataRow = item;
       this.dialog1 = true;
     },
     mostrarTipo(item) {
+      //se extrae el item a mostrar de la datatable
       this.showDataRow = item;
       this.dialog3 = true;
       this.getAllTypes();
     },
     eliminar(item) {
+      //se extrae el item a eliminar de la datatable
       this.deleteDataRow = item;
       this.dialog2 = true;
     },
+
+    //método de eliminación al confirmar
     deletePhase() {
       PhaseService.delete(this.deleteDataRow.id)
         .then((response) => {
@@ -221,6 +228,7 @@ export default {
           Notify.error("deleteData");
         });
     },
+    //método de modificar al confirmar
     updatePhase() {
       if (this.editDataRow.name === "") {
         //Advertencia
@@ -247,10 +255,11 @@ export default {
         });
       }
     },
+    //llenado de la lista de fases con la petición de la API
     getAllPhases() {
       PhaseService.listAll()
         .then((response) => {
-          this.item = response.data;
+          this.item = response.data; //llenado
         })
         .catch((e) => {
           console.log(e);
@@ -258,17 +267,23 @@ export default {
           Notify.error("getData");
         });
     },
+
+    //llenado de la lista de tipos con la petición de la API
     getAllTypes() {
+      //se manda a la petición el id de la fase (guardado en showData)
       TypePhaseService.getTypeByPhase(this.showDataRow.id)
         .then((response) => {
           let result = response.data;
+          //si el arrglo contiene algo llena la lista
           if (result.length > 0) {
             this.types = result;
           } else {
+            //si no hay tipos asigandos, se crea un objeto vacío con la estructura de tipo
             this.types = [
               {
                 type: {
                   id: 0,
+                  //de tal manera que en el datatable muestre el mensaje: 
                   name: "Aún no hay tipos asignados",
                 },
               },
@@ -283,6 +298,7 @@ export default {
     },
   },
   mounted() {
+    //llenado al cargar la vista
     this.getAllPhases();
   },
 };
