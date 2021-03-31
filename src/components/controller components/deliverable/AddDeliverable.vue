@@ -21,6 +21,7 @@
           v-model="deliverable.name"
         ></v-text-field>
         <v-file-input
+          v-model="currentFile"
           @change="getFile"
           label="Archivo"
           outlined
@@ -79,6 +80,7 @@ export default {
                 .then((response) => {
                   Notify.done("deliverable");
                   this.currentFile = undefined;
+                  this.deliverable.name = "";
                   this.charge();
                   this.dialog = false;
                 })
