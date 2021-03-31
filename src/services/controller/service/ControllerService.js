@@ -1,6 +1,9 @@
 import API from '../api/ApiType'
 
 class ControllerService{
+    listNotAssigned(){
+        return API.get("/consultarNoAsignados")
+    }
     listAll(){
         return API.get("/consultarTodos")
     }

@@ -16,10 +16,11 @@
         outlined
         dense
         color="red"
-        label="Tipo de proyecto"
+        label="Tipo vacío"
         v-bind:items="types"
+        v-model="type.id"
         item-text="name"
-        item-value="name"
+        item-value="id"
         prepend-inner-icon="mdi-clipboard-text"
       ></v-select>
       <v-btn rounded color="blueButton" dark class="mx-3" @click="open()">
@@ -27,7 +28,7 @@
         Agregar contenido
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn color="red" rounded class="mx-2">
+      <v-btn color="red" rounded class="mx-2" @click="showConfirm()">
         <span class="white--text">Finalizar</span>
       </v-btn>
       <v-btn color="gray" rounded class="mx-3">
@@ -36,12 +37,14 @@
     </v-row>
     <v-row class="mt-5">
       <v-expansion-panels focusable>
-        <v-expansion-panel
-          v-for="(fases, i) in allData.dataDeliverable"
-          :key="i"
-        >
-          <v-expansion-panel-header color="#0086DD">
-            <span class="white--text">Fase {{ i }}</span>
+        <v-expansion-panel v-for="(fases, i) in allData" :key="i">
+          <v-expansion-panel-header color="light-blue darken-3">
+            <span class="white--text subtitle-1"
+              ><v-avatar class="mr-2" color="teal lighten-1" size="37">
+                {{ fases.percent }}%</v-avatar
+              >
+              Fase: {{ fases.fase.name }}</span
+            >
             <template v-slot:actions>
               <v-icon
                 class="mx-5"
@@ -54,9 +57,12 @@
             </template>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <span v-for="(obj, index) in allData.xd" :key="index">
-              {{ obj.name }}
-            </span>
+            <v-data-table
+              :headers="headers"
+              :items="fases.entregables"
+              :hide-default-footer="true"
+              class="elevation-1 mt-5"
+            ></v-data-table>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -65,7 +71,36 @@
       class="d-flex flex-row"
       style="margin-top: 2%; margin-bottom: 2%"
     ></div>
-
+    <v-dialog v-model="dialog2" persistent max-width="600">
+      <v-card class="rounded-lg">
+        <v-card-title class="red">
+          <span class="headline" style="color: white"
+            ><v-icon left class="white--text">mdi-information</v-icon> ¿Estás
+            seguro de guardar los datos actuales?
+          </span>
+        </v-card-title>
+        <v-card-text class="mt-5">
+          <h3 style="text-align: center">
+            Una vez asignados no podrán moverse del lugar elegido.
+          </h3>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            elevation="2"
+            color="blue-grey darken-1"
+            text
+            @click="dialog2 = false"
+          >
+            Cancelar
+          </v-btn>
+          <v-btn elevation="2" color="green darken-1" text @click="test()">
+            Sí, Finalizar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="dialog1" persistent max-width="700">
       <v-card class="rounded-lg">
         <v-stepper v-model="e1">
@@ -92,8 +127,10 @@
                           item-color="red"
                           label="Nombre de la fase"
                           v-bind:items="phases"
+                          v-model="content.phase"
                           item-text="name"
-                          item-value="name"
+                          item-value="id"
+                          return-object
                           prepend-inner-icon="mdi-format-list-bulleted-square"
                         ></v-select
                       ></v-col>
@@ -104,6 +141,7 @@
                           dense
                           color="red"
                           label="Porcentaje"
+                          v-model="content.percent"
                           prepend-inner-icon="mdi-percent"
                         >
                         </v-text-field
@@ -116,19 +154,19 @@
                 <v-spacer></v-spacer>
                 <v-btn
                   elevation="2"
-                  color="green darken-1"
-                  text
-                  @click="e1 = 2"
-                >
-                  Continuar
-                </v-btn>
-                <v-btn
-                  elevation="2"
                   color="blue-grey darken-1"
                   text
                   @click="dialog1 = false"
                 >
                   Cancelar
+                </v-btn>
+                <v-btn
+                  elevation="2"
+                  color="green darken-1"
+                  text
+                  @click="e1 = 2"
+                >
+                  Continuar
                 </v-btn>
               </v-card-actions>
             </v-stepper-content>
@@ -147,20 +185,22 @@
                   item-color="red"
                   chips
                   color="red"
-                  item-text="obj.name"
-                  item-value="obj"
+                  item-text="name"
+                  item-value="id"
+                  return-object
                 ></v-select>
               </v-card>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn
                   elevation="2"
-                  color="green darken-1"
+                  color="blue-grey darken-1"
                   text
-                  @click="submit()"
+                  @click="dialog1 = false"
                 >
-                  Guardar datos
+                  Cancelar
                 </v-btn>
+
                 <v-btn
                   elevation="2"
                   color="blue-grey darken-1"
@@ -171,11 +211,11 @@
                 </v-btn>
                 <v-btn
                   elevation="2"
-                  color="blue-grey darken-1"
+                  color="green darken-1"
                   text
-                  @click="dialog1 = false"
+                  @click="submit()"
                 >
-                  Cancelar
+                  Guardar datos
                 </v-btn>
               </v-card-actions>
             </v-stepper-content>
@@ -187,56 +227,155 @@
 </template>
 
 <script>
+import DeliverableAssigmentService from "../../../services/controller/service/DeliverableAssigmentService";
+import DeliverableService from "../../../services/controller/service/DeliverableService";
+import PhaseService from "../../../services/controller/service/PhaseService";
+import ControllerService from "../../../services/controller/service/ControllerService";
+import TypePhaseService from "../../../services/controller/service/TypePhaseService";
 export default {
   name: "FillNewType",
   data() {
     return {
-      phases: [{ name: "F1" }, { name: "F2" }, { name: "F3" }],
-      types: [{ name: "T1" }, { name: "T2" }, { name: "T3" }],
-      deliverables: [
+      headers: [
         {
-          obj: {
-            name: "E1",
-            id: "1",
-          },
+          text: "Entregable",
+          align: "start",
+          sortable: false,
+          value: "name",
         },
         {
-          obj: {
-            name: "E2",
-            id: "2",
-          },
-        },
-        {
-          obj: {
-            name: "E3",
-            id: "3",
-          },
+          text: "Archivo designado",
+          sortable: false,
+          align: "start",
+          value: "originalName",
         },
       ],
-      allData: {
-        dataDeliverable: [],
-        xd:[{name: "E1"},{name: "2",}],
+      type: {
+        id: 0,
       },
-      //contener la data de los entregables que yo generé N
+      content: {
+        phase: {},
+        percent: 0,
+        deliverable: [],
+      },
+      //Fases de la API
+      phases: [],
+      //Tipos de la API vacíos
+      types: [],
+      //Entregables de la API
+      deliverables: [],
+      allData: [],
+      //contener la data de los entregables que yo generé N por fase
       listDeliverable: [],
       dialog1: false,
+      dialog2: false,
       e1: 1,
     };
   },
   methods: {
     deletePhase(index) {
-      this.allData.dataDeliverable.splice(index, 1);
+      this.allData.splice(index, 1);
     },
     open() {
       this.dialog1 = true;
+      this.content.phase = {};
+      this.content.percent = 0;
+      this.content.deliverable = [];
+      this.listDeliverable = [];
+      this.e1 = 1;
+    },
+    showConfirm() {
+      this.dialog2 = true;
     },
     submit() {
-      console.log(this.listDeliverable);
+      this.content.deliverable = this.listDeliverable;
+      let contenido = {
+        fase: this.content.phase,
+        percent: this.content.percent,
+        entregables: this.content.deliverable,
+      };
+      this.allData.push(contenido);
+      console.log(this.allData);
+      this.dialog1 = false;
+    },
+    saveAll() {},
+    test() {
+      this.allData.map((item, i) => {
+        let fase_tipo = {
+          id: null,
+          type: {
+            id: this.type.id,
+          },
+          phase: {
+            id: item.fase.id,
+          },
+          percent: item.percent,
+        };
+        TypePhaseService.save(fase_tipo)
+          .then((response) => {
+            console.log(response.data);
+            alert(response.data);
+            let idfasetipo = response.data.id;
+            let porcentajeIndividual =
+              response.data.percent / item.entregables.length;
+            item.entregables.map((e, j) => {
+              let deliverableAssigment = {
+                id: null,
+                typePhase: {
+                  id: idfasetipo,
+                },
+                deliverable: {
+                  id: e.id,
+                },
+                percent: porcentajeIndividual,
+              };
+              DeliverableAssigmentService.save(deliverableAssigment)
+                .then((response) => {
+                  alert("XD");
+                  console.log(response.data);
+                })
+                .catch((e) => {
+                  console.log(e);
+                });
+            });
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      });
+    },
+    getNotAssigned() {
+      ControllerService.listNotAssigned()
+        .then((response) => {
+          this.types = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    getPhases() {
+      PhaseService.listAll()
+        .then((response) => {
+          this.phases = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    getDeliverable() {
+      DeliverableService.listAll()
+        .then((response) => {
+          this.deliverables = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
   },
-  mounted() {},
+  mounted() {
+    this.getPhases();
+    this.getDeliverable();
+    this.getNotAssigned();
+  },
 };
 </script>
-
-<style>
-</style>
