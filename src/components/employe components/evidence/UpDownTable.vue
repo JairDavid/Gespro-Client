@@ -76,7 +76,7 @@
                   <v-col cols="12" sm="9" md="3"></v-col>
                   <v-col cols="12" sm="9" md="6">
                     <v-checkbox
-                      v-model="selected"
+                      v-model="progress.finish"
                       color="red"
                       label="Marcar como terminado"
                       value="true"
@@ -151,8 +151,19 @@ export default {
   },
   methods: {
     subir(item) {
-      this.dialog = true;
       this.idAsignacion = item.id;
+      ProgressService.finish(this.idProyecto, this.idAsignacion)
+      .then((response)=>{
+        if(response.data == false){
+          this.dialog= true;
+        }else{
+          Notify.fillFields("foundFinish");
+        }
+      })
+      .catch((e)=>{
+        console.log(e);
+        Notify.error("getData");
+      })
     },
     getPhases(id) {
       ProjectPhaseService.searchIdProject(id)

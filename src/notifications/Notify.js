@@ -17,6 +17,9 @@ class Notify {
             case 'saveProgress':
                 text = 'Archivo y comentario son obligatorios.'
                 break;
+            case 'foundFinish':
+                text = 'Este entregable ya ha sido completado'
+                break;    
         }
         return Vue.$toast.warning(text, {
             position: "bottom-right",

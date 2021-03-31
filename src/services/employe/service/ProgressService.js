@@ -14,6 +14,10 @@ class ProgressService {
 		return API.get("/consultarTerminados");
 	}
 
+	finish(idproyecto, idasignacion){
+		return API.get(`/terminado/${idproyecto}/${idasignacion}`)
+	}
+
 	save(obj) {
 		return API.post('/guardar', obj);
 	}
