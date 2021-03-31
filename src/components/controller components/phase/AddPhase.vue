@@ -13,15 +13,13 @@
         </span>
       </v-card-title>
       <v-card-text class="mt-5">
-        <v-container>
-          <v-text-field
-            color="red"
-            v-model="phase.name"
-            outlined
-            label="Nombre de la fase"
-            prepend-inner-icon="mdi-ballot"
-          ></v-text-field>
-        </v-container>
+        <v-text-field
+          color="red"
+          v-model="phase.name"
+          outlined
+          label="Nombre de la fase"
+          prepend-inner-icon="mdi-ballot"
+        ></v-text-field>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>

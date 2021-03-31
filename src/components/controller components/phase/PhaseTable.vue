@@ -41,8 +41,8 @@
         </template>
       </v-data-table>
     </v-card>
-    <v-dialog v-model="dialog3" persistent max-width="800">
-      <v-card class="rounded-lg">
+    <v-dialog v-model="dialog3" persistent max-width="600">
+      <v-card>
         <v-card>
           <v-card-title>
             <v-btn
@@ -54,7 +54,7 @@
             >
               <v-icon class="white--text">mdi-arrow-left-thick</v-icon>
             </v-btn>
-            Tipo de proyecto con fase: {{ showDataRow.name }}
+            Tipos con fase: {{ showDataRow.name }}
             <v-spacer></v-spacer>
             <v-text-field
               v-model="searchType"
