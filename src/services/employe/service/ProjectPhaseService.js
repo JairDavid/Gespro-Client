@@ -1,6 +1,6 @@
-import API from './ApiProgress';
+import API from '../api/ApiProjectPhase';
 
-class EmployeService {
+class ProjectPhaseService {
 
 	getAll() {
 		return API.get("/consultarTodos");
@@ -9,6 +9,12 @@ class EmployeService {
 	getById(id) {
 		return API.get(`/consultaUnica/${id}`);
 	}
+
+    
+
+    searchIdProject(id){
+        return API.get(`/tipoProyecto/${id}`)
+    }
 
 	save(obj) {
 		return API.post('/guardar', obj);
@@ -23,3 +29,5 @@ class EmployeService {
 	}
 
 }
+
+export default new ProjectPhaseService();
