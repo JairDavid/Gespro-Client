@@ -106,7 +106,7 @@
               rounded
               color="blueButton"
               dark
-              :href="`http://10.0.0.11:8080/avance/descargar/${item.id}`"
+              :href="`http://localhost:8080/avance/descargar/${item.id}`"
             >
               <v-icon> mdi-cloud-download </v-icon>
             </v-btn>

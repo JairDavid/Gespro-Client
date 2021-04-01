@@ -17,7 +17,7 @@ class DeliverableAssigmentService {
     searchDeliverable(id){
         return API.get(`/faseProyecto/${id}`)
     }
-
+	
 	update(id) {
 		return API.put(`/actualizar/${id}`);
 	}
