@@ -59,7 +59,7 @@ export default {
       headers: [
         { text: "Nombre del proyecto", align: "start", value: "name" },
         { text: "Cliente", align: "start", value: "clientName" },
-        { text: "Responsable", align: "start", value: "employe.firstName" },
+        { text: "Responsable", align: "start", value: "employe.fullName" },
         { text: "CURP del responsable", align: "start", value: "employe.curp" },
         { text: "Detalles", value: "detalles" },
         { text: "Modificar", value: "modificar" },

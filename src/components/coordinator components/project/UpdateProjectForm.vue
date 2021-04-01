@@ -91,7 +91,7 @@
           prepend-inner-icon="mdi-clipboard-account"
           v-bind:items="employees"
           v-model="project.employe.id"
-          item-text="firstName"
+          item-text="fullName"
           item-value="id"
         ></v-select>
 
@@ -169,7 +169,7 @@
 </template>
 <script>
 import Notify from "../../../notifications/Notify";
-import ControllerService from "../../../services/controller/ControllerService";
+import ControllerService from "../../../services/controller/service/ControllerService";
 import EmployeService from "../../../services/humanResource/service/EmployeService";
 import CoordinatorService from "../../../services/coordinator/CoordinatorService";
 export default {
@@ -203,21 +203,31 @@ export default {
       }
     },
     updateProject() {
-      //Actualizamos el proyecto (por ID)
-      CoordinatorService.update(this.project.id, this.project)
+      CoordinatorService.searchByName(this.project.name)
         .then((response) => {
-          //Regresa los inputs en blanco
-          this.project.id = null;
-          this.project.name = "";
-          this.project.duration = "";
-          this.project.description = "";
-          this.project.clientName = "";
-          this.project.date = "";
-          this.project.cost = "";
-          this.project.employe.id = 0;
-          this.project.type.id = 0;
-          Notify.done("updateProject");
-          this.$router.push("/generalProject");
+          if (response.data.name === undefined) {
+            //Actualizamos el proyecto (por ID)
+            CoordinatorService.update(this.project.id, this.project)
+              .then((response) => {
+                //Regresa los inputs en blanco
+                this.project.id = null;
+                this.project.name = "";
+                this.project.duration = "";
+                this.project.description = "";
+                this.project.clientName = "";
+                this.project.date = "";
+                this.project.cost = "";
+                this.project.employe.id = 0;
+                this.project.type.id = 0;
+                Notify.done("updateProject");
+                this.$router.push("/generalProject");
+              })
+              .catch((e) => {
+                console.log(e);
+              });
+          } else {
+            Notify.fillFields("valid-project");
+          }
         })
         .catch((e) => {
           console.log(e);

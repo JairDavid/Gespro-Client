@@ -1,6 +1,9 @@
-import API from './ApiType'
+import API from '../api/ApiType'
 
 class ControllerService{
+    listNotAssigned(){
+        return API.get("/consultarNoAsignados")
+    }
     listAll(){
         return API.get("/consultarTodos")
     }
@@ -12,8 +15,8 @@ class ControllerService{
         return API.post('/guardar',obj)
     }
 
-    update(obj){
-    	return API.put('/actualizar',obj)
+    update(id,obj){
+    	return API.put(`/actualizar/${id}`,obj)
     }
 
     delete(id){
