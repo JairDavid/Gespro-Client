@@ -92,7 +92,7 @@
           dense
           color="#A93226"
           prepend-inner-icon="mdi-folder"
-          :label="project.employe.firstName"
+          :label="project.employe.fullName"
         >
         </v-select>
 

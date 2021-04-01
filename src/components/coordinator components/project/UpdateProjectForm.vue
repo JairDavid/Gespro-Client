@@ -42,6 +42,7 @@
         <h6 class="subtitle-1 mb-2">Duración estimada del proyecto (Días):</h6>
         <v-text-field
           type="number"
+          :rules="[rules.durationMin]"
           outlined
           dense
           color="red"
@@ -91,7 +92,7 @@
           prepend-inner-icon="mdi-clipboard-account"
           v-bind:items="employees"
           v-model="project.employe.id"
-          item-text="firstName"
+          item-text="fullName"
           item-value="id"
         ></v-select>
 
@@ -101,6 +102,7 @@
           outlined
           dense
           color="red"
+          :rules="[rules.costMin]"
           prepend-inner-icon="mdi-currency-usd"
           v-model="project.cost"
         ></v-text-field>
@@ -169,7 +171,7 @@
 </template>
 <script>
 import Notify from "../../../notifications/Notify";
-import ControllerService from "../../../services/controller/ControllerService";
+import ControllerService from "../../../services/controller/service/ControllerService";
 import EmployeService from "../../../services/humanResource/service/EmployeService";
 import CoordinatorService from "../../../services/coordinator/CoordinatorService";
 export default {
@@ -187,6 +189,19 @@ export default {
         employe: { id: 0 },
         type: { id: 0 },
       },
+      //reglas para el costo y duración
+      rules: {
+        durationMin: (value) => {
+          if (value < 1) {
+            this.project.duration= 1;
+          }
+        },
+        costMin: (value) => {
+          if (value < 1) {
+            this.project.cost= 1;
+          }
+        },
+      },
       param: "",
       dialog: false,
       projectTypes: [],
@@ -203,21 +218,31 @@ export default {
       }
     },
     updateProject() {
-      //Actualizamos el proyecto (por ID)
-      CoordinatorService.update(this.project.id, this.project)
+      CoordinatorService.searchByName(this.project.name)
         .then((response) => {
-          //Regresa los inputs en blanco
-          this.project.id = null;
-          this.project.name = "";
-          this.project.duration = "";
-          this.project.description = "";
-          this.project.clientName = "";
-          this.project.date = "";
-          this.project.cost = "";
-          this.project.employe.id = 0;
-          this.project.type.id = 0;
-          Notify.done("updateProject");
-          this.$router.push("/generalProject");
+          if (response.data.name === undefined) {
+            //Actualizamos el proyecto (por ID)
+            CoordinatorService.update(this.project.id, this.project)
+              .then((response) => {
+                //Regresa los inputs en blanco
+                this.project.id = null;
+                this.project.name = "";
+                this.project.duration = "";
+                this.project.description = "";
+                this.project.clientName = "";
+                this.project.date = "";
+                this.project.cost = "";
+                this.project.employe.id = 0;
+                this.project.type.id = 0;
+                Notify.done("updateProject");
+                this.$router.push("/generalProject");
+              })
+              .catch((e) => {
+                console.log(e);
+              });
+          } else {
+            Notify.fillFields("valid-project");
+          }
         })
         .catch((e) => {
           console.log(e);

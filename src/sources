@@ -3,31 +3,20 @@ git status (verifica los archivos que han tenido cambios)
 git add .  (agrega todos los archivos a tu rama)
 git remote add origin https://gitlab.com/gesproteam/gesproweb.git   (añades el repo a la cual quieres subir cambios)
 git push -u origin master    (publica los cambios al repo)
-      
-      project: {
-        id:9,
-        name: "awdaw",
-        duration: "awdawd",
-        description: "daw",
-        clientName: "adw",
-        date: "awdwd",
-        cost: "awd",
-        employe: { id: 1 },
-        type: { id: 1 },
-      }
+
+      this.allData.map((item, m) => {
+        console.log("data:" + item.fase.id + " extern:" + extern.fase.id);
+        if (item.fase.id === extern.fase.id) {
+          c
+          
+          return;
+        }
+        console.log("entro pero false;v");
+        
+      });
+
+              if(this.allData[i].fase.id){
+
+        }
 
 
-          this.$toast.warning("No se encontró un proyeto con ese nombre.", {
-            position: "bottom-right",
-            timeout: 2381,
-            closeOnClick: true,
-            pauseOnFocusLoss: true,
-            pauseOnHover: true,
-            draggable: true,
-            draggablePercent: 0.6,
-            showCloseButtonOnHover: false,
-            hideProgressBar: true,
-            closeButton: "button",
-            icon: true,
-            rtl: false,
-          });

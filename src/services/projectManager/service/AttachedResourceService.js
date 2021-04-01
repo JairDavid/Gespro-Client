@@ -9,12 +9,16 @@ class AttachedResourceService{
         return ApiAttachedResource.get(`/consultaUnica/${id}`)
     }
 
+    getOneAdscritoProjects(id){
+        return ApiAttachedResource.get(`/consultaIdEmpleado/${id}`)
+    }
+
     save(obj){
         return ApiAttachedResource.post('/guardar',obj)
     }
 
-    update(obj){
-    	return ApiAttachedResource.put('/actualizar',obj)
+    update(id, obj){
+    	return ApiAttachedResource.put(`/actualizar/${id}`, obj)
     }
 
     delete(id){

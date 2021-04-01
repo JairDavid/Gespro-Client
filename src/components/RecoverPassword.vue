@@ -9,6 +9,7 @@
       <v-card class="rounded-lg">
         <v-card-title class="red">
           <span class="headline" style="color: white">
+            <v-icon color="white">mdi-email-lock</v-icon> 
             Recuperando mi contraseña
           </span>
         </v-card-title>
@@ -58,7 +59,7 @@ export default {
   data() {
     return {
       dialog: false,
-      email:'',
+      email: "",
     };
   },
 };

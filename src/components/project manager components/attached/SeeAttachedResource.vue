@@ -2,7 +2,14 @@
   <div class="text-center">
     <v-dialog v-model="dialog" width="1150">
       <template v-slot:activator="{ on, attrs }">
-        <v-btn rounded class="greenButton" dark v-bind="attrs" v-on="on">
+        <v-btn
+          rounded
+          class="greenButton"
+          dark
+          v-bind="attrs"
+          v-on="on"
+          @click="recarga()"
+        >
           <v-icon class="white--text">mdi-eye</v-icon>
         </v-btn>
       </template>
@@ -17,7 +24,7 @@
           >
             <v-icon class="white--text">mdi-arrow-left-thick</v-icon>
           </v-btn>
-          Proyectos de: {{ dataExtern.nombre }}
+          Proyectos de: {{ dataExtern.fullName }}
           <v-spacer></v-spacer>
           <v-text-field
             v-model="search"
@@ -30,7 +37,7 @@
         </v-card-title>
         <v-data-table
           :headers="headers"
-          :items="item"
+          :items="adscritoProyects"
           :search="search"
           :items-per-page="5"
         >
@@ -59,7 +66,10 @@
         <v-card-text class="mt-5">
           <v-select
             prepend-inner-icon="mdi-briefcase"
-            :items="['Tester', 'Programador', 'Diseñador']"
+            :items="puestos"
+            item-text="name"
+            v-model="Adscrito.labor.id"
+            item-value="id"
             label="Puesto"
             outlined
             color="red"
@@ -81,7 +91,7 @@
             elevation="2"
             color="green darken-1"
             text
-            @click="dialog2 = false"
+            @click="(dialog2 = false), editLabor()"
           >
             Guardar
           </v-btn>
@@ -99,9 +109,7 @@
         <v-card-text class="mt-5">
           <v-container>
             <h4 style="text-align: center" class="black--text">
-              ¿Estás seguro que deseas removerlo del proyecto "{{
-                deleteDataRow.proyecto
-              }}"?
+              ¿Estás seguro que deseas removerlo del proyecto "{{this.name}}"?
             </h4>
           </v-container>
         </v-card-text>
@@ -120,7 +128,7 @@
             elevation="2"
             color="green darken-1"
             text
-            @click="dialog3 = false"
+            @click="(dialog3 = false), deleteProject()"
           >
             Quitar
           </v-btn>
@@ -130,6 +138,10 @@
   </div>
 </template>
 <script>
+import AttachedResource from "../../../services/projectManager/service/AttachedResourceService";
+import LaborService from "../../../services/projectManager/service/LaborService";
+import Notify from "../../../notifications/Notify";
+
 export default {
   name: "SeeAttachedResource",
   props: {
@@ -139,50 +151,120 @@ export default {
     return {
       search: "",
       headers: [
-        { text: "Proyecto", align: "start", value: "proyecto" },
-        { text: "Tipo de proyecto", align: "start", value: "tipo" },
-        { text: "Puesto", align: "start", value: "puesto" },
+        { text: "Proyecto", align: "start", value: "project.name" },
+        {
+          text: "Tipo de proyecto",
+          align: "start",
+          value: "project.type.name",
+        },
+        { text: "Puesto", align: "start", value: "labor.name" },
         { text: "Editar", align: "center", value: "editar" },
         { text: "Eliminar", align: "center", value: "eliminar" },
       ],
-      item: [
-        {
-          proyecto: "SIDEC",
-          tipo: "Software",
-          puesto: "Programador",
+      Adscrito: {
+        id: null,
+        employe: {
+          id: 0,
         },
-        {
-          proyecto: "GACU",
-          tipo: "Diseño",
-          puesto: "Diseñador",
+        project: {
+          id: 0,
         },
-        {
-          proyecto: "PROA",
-          tipo: "Arquitectura",
-          puesto: "Master",
+        labor: {
+          id: 0,
         },
-        {
-          proyecto: "SIDEC",
-          tipo: "Software",
-          puesto: "Programador",
-        },
-      ],
+      },
+      adscritoProyects: [],
+      puestos: [],
       dialog: false,
       dialog2: false,
       dialog3: false,
+      name: {},
       deleteDataRow: {},
       editDataRow: {},
     };
   },
   methods: {
-    editar(item) {
-      this.dialog2 = true;
-      this.editDataRow = item;
+    // Obtener todos los proyectos del empleado dependiendo del "id"
+    getAllProjectsAdscrito() {
+      let id = this.dataExtern.id;
+      AttachedResource.getOneAdscritoProjects(id)
+        .then((response) => {
+          this.adscritoProyects = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
+
+    getAllLabors() {
+      LaborService.getAll()
+        .then((response) => {
+          this.puestos = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+
+    // Actualizar el puesto del empleado
+    editLabor() {
+      if (
+        this.Adscrito.id === "" ||
+        this.Adscrito.employe.id === "" ||
+        this.Adscrito.project.id === "" ||
+        this.Adscrito.labor.id === ""
+      ) {
+      } else {
+        AttachedResource.update(this.Adscrito.id, this.Adscrito)
+          .then((response) => {
+            (this.Adscrito.id = null),
+              (this.Adscrito.employe.id = 0),
+              (this.Adscrito.project.id = 0);
+            Notify.done("updateProject");
+            this.getAllProjectsAdscrito();
+          })
+          .catch((e) => {
+            console.log(e);
+            Notify.error("saveData");
+          });
+      }
+    },
+
+    // Eliminar un proyecto
+    deleteProject() {
+      let id = this.deleteDataRow.id;
+      AttachedResource.delete(id)
+        .then((response) => {
+          Notify.done("deleteProject");
+          this.getAllProjectsAdscrito();
+          this.dialog2 = false;
+        })
+        .catch((e) => {
+          console.log(e);
+          Notify.error("deleteData");
+        });
+    },
+    // Recargar la lista de los proyectos de los empleados
+    recarga() {
+      this.getAllProjectsAdscrito();
+    },
+
+    editar(item) {
+      this.getAllProjectsAdscrito();
+      this.dialog2 = true;
+      this.Adscrito = item;
+    },
+
     eliminar(item) {
       this.dialog3 = true;
+      this.name = item.project.name;
       this.deleteDataRow = item;
     },
+  },
+
+  mounted() {
+    this.getAllProjectsAdscrito();
+    this.getAllLabors();
   },
 };
 </script>

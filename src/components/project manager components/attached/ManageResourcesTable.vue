@@ -17,7 +17,7 @@
           color="red"
         ></v-text-field>
       </v-card-title>
-      <v-data-table :headers="headers" :items="item" :search="search">
+      <v-data-table :headers="headers" :items="empleados" :search="search">
         <template v-slot:[`item.anadir`]="{ item }">
           <v-btn
             rounded
@@ -46,7 +46,10 @@
             <v-select
               color="red"
               prepend-inner-icon="mdi-briefcase"
-              :items="['SIDEC', 'GACU', 'GESPRO']"
+              v-bind:items="proyectos"
+              v-model="Adscrito.project.id"
+              item-text="name"
+              item-value="id"
               label="Proyecto"
               outlined
             >
@@ -54,7 +57,10 @@
             <v-select
               color="red"
               prepend-inner-icon="mdi-briefcase"
-              :items="['Tester', 'Programador', 'Diseñador']"
+              v-bind:items="puestos"
+              item-text="name"
+              v-model="Adscrito.labor.id"
+              item-value="id"
               label="Puesto"
               outlined
             >
@@ -76,7 +82,7 @@
             elevation="2"
             color="green darken-1"
             text
-            @click="dialog = false"
+            @click="(dialog = false), validar()"
           >
             Guardar
           </v-btn>
@@ -87,6 +93,12 @@
 </template>
 <script>
 import SeeAttachedResource from "../attached/SeeAttachedResource";
+import EmplooyesService from "../../../services/projectManager/service/EmplooyesService";
+import ProjectService from "../../../services/projectManager/service/ProjectService";
+import LaborService from "../../../services/projectManager/service/LaborService";
+import AttachedResourceService from "../../../services/projectManager/service/AttachedResourceService";
+import Notify from "../../../notifications/Notify";
+
 export default {
   name: "ManageResourcesTable",
   components: {
@@ -97,35 +109,147 @@ export default {
       search: "",
       headers: [
         { text: "Curp", align: "start", value: "curp" },
-        { text: "Nombre", align: "center", value: "nombre" },
-        { text: "Direccion", align: "center", value: "direccion" },
+        { text: "Nombre", align: "center", value: "fullName" },
+        { text: "Direccion", align: "center", value: "adress" },
         { text: "Añadir", align: "center", value: "anadir" },
         { text: "Ver proyectos asignados", align: "center", value: "ver" },
       ],
-      item: [
-        {
-          curp: "LOZ00016MRSPTZ",
-          nombre: "Gustavo Lopez",
-          direccion: "Jiutepec",
+      empleados: [],
+      proyectos: [],
+      puestos: [],
+      idProjects: [],
+      adscritoProyects: [],
+
+      Adscrito: {
+        id: null,
+        employe: {
+          id: 0,
         },
-        {
-          curp: "ZPOST77782HHSS",
-          nombre: "Jair Vazquez",
-          direccion: "3 de mayo",
+        project: {
+          id: 0,
         },
-      ],
+        labor: {
+          id: 0,
+        },
+      },
+
       dialog: false,
       addDataRow: {},
     };
   },
   methods: {
+    // Obtener todos los proyectos en donde el empleado este registrado
+    getAllProjectsAdscrito(id) {
+      AttachedResourceService.getOneAdscritoProjects(id)
+        .then((response) => {
+          this.adscritoProyects = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+
+    // Obtener todos los empleados
+    getAllEmplooyes() {
+      EmplooyesService.getAll()
+        .then((response) => {
+          this.empleados = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+
+    // Obtener todos los proyectos
+    getAllProjects() {
+      ProjectService.getAll()
+        .then((response) => {
+          this.proyectos = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+
+    // Obtener todos los puestos
+    getAllLabors() {
+      LaborService.getAll()
+        .then((response) => {
+          this.puestos = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+
     ConsultarProyectos() {
       this.$router.push("/consultarProyectos");
     },
     anadir(item) {
       this.dialog = true;
       this.addDataRow = item;
+      this.getAllProjectsAdscrito(item.id);
     },
+    // valido si ya se encuentra el empleado registrado en el proyecto y que todos los campos esten llenos
+    validar() {
+      let add = false;
+      let flag = false;
+
+
+      if (
+        this.Adscrito.project.id < 1 ||
+        this.Adscrito.labor.id < 1
+      ) {
+        Notify.fillFields("adscrito");
+      } else {
+        
+      this.adscritoProyects.map((item, i) => {
+        this.idProjects[i] = item.project.id;
+      });
+
+        for (let j = 0; j < this.idProjects.length; j++) {
+          if (this.Adscrito.project.id === this.idProjects[j]) {
+            Notify.fillFields("anotherAdd");
+            flag = true;
+          }
+        }
+
+        if (flag === true) {
+          add = false;
+          this.idProjects = [];
+        } else {
+          add = true;
+          this.idProjects = [];
+        }
+
+        if (add === true) {
+          this.addAdscrito();
+          this.idProjects = [];
+        }
+      }
+    },
+
+    // Añadir adscrito
+    addAdscrito() {
+      this.Adscrito.employe.id = this.addDataRow.id;
+      AttachedResourceService.save(this.Adscrito)
+        .then((response) => {
+          (this.Adscrito.id = null),
+            (this.Adscrito.employe.id = 0),
+            (this.Adscrito.project.id = 0),
+            (this.Adscrito.labor.id = 0);
+          Notify.done("project");
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+  },
+
+  mounted() {
+    this.getAllEmplooyes();
+    this.getAllProjects();
+    this.getAllLabors();
   },
 };
 </script>

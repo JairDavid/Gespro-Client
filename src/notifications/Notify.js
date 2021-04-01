@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from "vue";
 import "vue-toastification/dist/index.css";
 class Notify {
     fillFields(message) {
@@ -76,70 +76,96 @@ class Notify {
             rtl: false,
         })
     }
-    error(message) {
-        let text;
-        switch (message) {
-            case 'add':
-                text = 'al agregar, verifique los datos.'
-                break;
-            case 'delete':
-                text = 'al borrar, verifique los datos.'
-                break;
-            case 'update':
-                text = 'al actualizar, verifique los datos.'
-                break;
-            case 'search':
-                text = 'al buscar, verifique los datos.'
-                break;
-            case 'getData':
-                text = 'interno al obtener los datos'
-                break;
-            case 'saveData':
-                text = 'interno al guardar los datos.'
-                break;
-            case 'deleteData':
-                text = 'interno al eliminar los datos.'
-                break;
-            case 'updateData':
-                text = 'interno al actualizar los datos.'
-                break;
-        }
-        return Vue.$toast.error('Ocurrió un error ' + text, {
-            position: "bottom-right",
-            timeout: 2381,
-            closeOnClick: true,
-            pauseOnFocusLoss: true,
-            pauseOnHover: true,
-            draggable: true,
-            draggablePercent: 0.6,
-            showCloseButtonOnHover: false,
-            hideProgressBar: true,
-            closeButton: "button",
-            icon: true,
-            rtl: false,
-        })
+    return Vue.$toast.success(text + ' correctamente.', {
+      position: "bottom-right",
+      timeout: 2381,
+      closeOnClick: true,
+      pauseOnFocusLoss: true,
+      pauseOnHover: true,
+      draggable: true,
+      draggablePercent: 0.6,
+      showCloseButtonOnHover: false,
+      hideProgressBar: true,
+      closeButton: "button",
+      icon: true,
+      rtl: false,
+    })
+  }
+  error(message) {
+    let text;
+    switch (message) {
+      case "add":
+        text = "al agregar, verifique los datos.";
+        break;
+
+      case "delete":
+        text = "al borrar, verifique los datos.";
+        break;
+      case "update":
+        text = "al actualizar, verifique los datos.";
+        break;
+      case "search":
+        text = "al buscar, verifique los datos.";
+        break;
+      case "getData":
+        text = "interno al obtener los datos";
+        break;
+      case "saveData":
+        text = "interno al guardar los datos.";
+        break;
+      case "deleteData":
+        text = "interno al eliminar los datos.";
+        break;
+      case "updateData":
+        text = "interno al actualizar los datos.";
+        break;
     }
-    info(message) {
-        let text;
-        switch (message) {
-            case 'projectNotFound':
-                text = 'No se encontró ningún proyecto con ese nombre.'
-                break;
-        }
-        return Vue.$toast.info(text, {
-            position: "bottom-right",
-            timeout: 2381,
-            closeOnClick: true,
-            pauseOnFocusLoss: true,
-            pauseOnHover: true,
-            draggable: true,
-            draggablePercent: 0.6,
-            showCloseButtonOnHover: false,
-            hideProgressBar: true,
-            closeButton: "button",
-            icon: true,
-            rtl: false,
-        })
+    return Vue.$toast.error("Ocurrió un error " + text, {
+      position: "bottom-right",
+      timeout: 2381,
+      closeOnClick: true,
+      pauseOnFocusLoss: true,
+      pauseOnHover: true,
+      draggable: true,
+      draggablePercent: 0.6,
+      showCloseButtonOnHover: false,
+      hideProgressBar: true,
+      closeButton: "button",
+      icon: true,
+      rtl: false,
+    });
+  }
+  info(message) {
+    let text = '';
+    switch (message) {
+      case 'outOfRange':
+        text = 'Las fases ya suman un total de 100%.';
+        break;
+      case 'projectNotFound':
+        text = 'No se encontró ningún proyecto con ese nombre.';
+        break;
+      case 'outPercent':
+        text = 'El porcentaje de la fase sobrepasa el 100%.';
+        break;
+      case 'incomplete':
+        text = 'El porcentaje total no cumple con el 100%.';
+        break;
+
     }
+    return Vue.$toast.info(text, {
+      position: "bottom-right",
+      timeout: 2381,
+      closeOnClick: true,
+      pauseOnFocusLoss: true,
+      pauseOnHover: true,
+      draggable: true,
+      draggablePercent: 0.6,
+      showCloseButtonOnHover: false,
+      hideProgressBar: true,
+      closeButton: "button",
+      icon: true,
+      rtl: false,
+    });
+  }
 }
 export default new Notify();

@@ -18,16 +18,21 @@
         ></v-text-field>
       </v-card-title>
       <div align="center">
-        <v-data-table :headers="headers" :items="item" :search="search">
+        <v-data-table :headers="headers" :items="proyectos" :search="search">
           <template v-slot:[`item.entregables`]="{ item }">
-            <v-btn rounded color="greenButton" dark @click="verEntregables(item)">
+            <v-btn
+              rounded
+              color="greenButton"
+              dark
+              @click="verEntregables(item)"
+            >
               <v-icon> mdi-eye </v-icon>
             </v-btn>
           </template>
         </v-data-table>
       </div>
     </v-card>
-    <v-dialog v-model="dialog" width="800">
+    <v-dialog v-model="dialog" persistent width="800">
       <v-card>
         <v-card-title>
           <v-btn
@@ -35,33 +40,47 @@
             class="white--text"
             style="margin-right: 1%"
             rounded
-            @click="dialog = false"
+            @click="(dialog = false), limpiar()"
           >
             <v-icon class="white--text">mdi-arrow-left-thick</v-icon>
           </v-btn>
-          Fases de: {{ seeDataRow.name }}
+          Entregables de: {{ seeDataRow.name }}
           <v-spacer></v-spacer>
           <v-text-field
             v-model="searchTable"
             append-icon="mdi-magnify"
             label="Buscar"
+            color="red"
             single-line
             hide-details
-            color="red"
           ></v-text-field>
         </v-card-title>
         <v-data-table
           :headers="encabezado"
-          :items="seeDataRow.entregable"
+          :items="entregables"
           :search="searchTable"
-          :items-per-page="5"
         >
+          <template v-slot:[`item.descargar`]="{ item }">
+            <v-btn
+              rounded
+              color="blueButton"
+              dark
+              :href="`http://localhost:8080/entregable/descargar/${item.deliverable.id}`"
+              
+            >
+              <v-icon> mdi-cloud-download </v-icon>
+            </v-btn>
+          </template>
         </v-data-table>
       </v-card>
     </v-dialog>
   </div>
 </template>
 <script>
+import ProjectService from "../../../services/projectManager/service/ProjectService";
+import ProgressService from "../../../services/projectManager/service/ProjectPhaseService";
+import DeliverableAssigmentService from "../../../services/projectManager/service/DeliverableAssigmentService";
+
 export default {
   name: "DeliverableProjectTable",
   data() {
@@ -71,55 +90,67 @@ export default {
         { text: "Proyecto", align: "start", value: "name" },
         { text: "Ver entregables", value: "entregables" },
       ],
-      encabezado: [{ text: "Entregable", aling: "center", value: "file" }],
-      item: [
-        {
-          name: "SIDEC",
-          value: "proyecto",
-          entregable: [
-            { file: "DFR" },
-            { file: "Lista de interesados" },
-            { file: "Firmas" },
-          ],
-        },
-        {
-          name: "Casas Norte",
-          value: "proyecto",
-          entregable: [
-            { file: "DFR" },
-            { file: "Lista de interesados" },
-            { file: "Firmas" },
-          ],
-        },
-        {
-          name: "SAT",
-          value: "proyecto",
-          entregable: [
-            { file: "DFR" },
-            { file: "Lista de interesados" },
-            { file: "Firmas" },
-          ],
-        },
-        {
-          name: "Administración Cuevas",
-          value: "proyecto",
-          entregable: [
-            { file: "DFR" },
-            { file: "Lista de interesados" },
-            { file: "Firmas" },
-          ],
-        },
+      encabezado: [
+        { text: "Entregable", aling: "center", value: "deliverable.name" },
+        { text: "Descargar", value :"descargar"}
       ],
+      proyectos: [],
+      fases: [],
+      entregables: [],
+
       dialog: false,
       seeDataRow: {},
       searchTable: "",
     };
   },
   methods: {
+    limpiar() {
+      this.entregables = [];
+      this.searchTable = "";
+    },
+
+    //Carga todos los proyectos a la vista
+    getAllProyects() {
+      ProjectService.getAll()
+        .then((response) => {
+          this.proyectos = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+
+    // Obtener todas las fases dependiendo del tipo de proyecto
     verEntregables(item) {
+      let id = 0;
+      let idPhase = 0
       this.dialog = true;
       this.seeDataRow = item;
+      id = this.seeDataRow.type.id;
+
+      ProgressService.searchIdProject(id)
+        .then((response) => {
+          this.fases = response.data;
+
+          // Obtener todos los entregables que contienen las fases
+          this.fases.map((item, i) =>{
+            idPhase = item.id
+            DeliverableAssigmentService.searchDeliverable(idPhase)
+            .then(response =>{
+              this.entregables.push(response.data)
+
+            }).catch(e =>{
+              console.log(e)
+            })
+          })
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
+  },
+  mounted() {
+    this.getAllProyects();
   },
 };
 </script>

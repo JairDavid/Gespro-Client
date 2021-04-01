@@ -16,11 +16,13 @@
         <v-text-field
           color="red"
           outlined
-          label="Nombre de la fase"
+          label="Nombre del entregable"
           prepend-inner-icon="mdi-ballot"
+          v-model="deliverable.name"
         ></v-text-field>
         <v-file-input
-          accept="image/*"
+          v-model="currentFile"
+          @change="getFile"
           label="Archivo"
           outlined
           color="red"
@@ -39,12 +41,7 @@
         >
           Cancelar
         </v-btn>
-        <v-btn
-          elevation="2"
-          color="green darken-1"
-          text
-          @click="dialog = false"
-        >
+        <v-btn elevation="2" color="green darken-1" text @click="upload()">
           Guardar
         </v-btn>
       </v-card-actions>
@@ -52,17 +49,69 @@
   </v-dialog>
 </template>
 <script>
+import Notify from "../../../notifications/Notify";
+import DeliverableService from "../../../services/controller/service/DeliverableService";
 export default {
   name: "AddDeliverable",
   data() {
     return {
-      phase: {
-        id: null, //verificar que no mande errores a la API
+      //objeto
+      deliverable: {
+        id: null,
         name: "",
-        type: "",
       },
       dialog: false,
+
+      //donde se guardará el archivo
+      currentFile: undefined,
     };
+  },
+  methods: {
+    upload() {
+      //validación: si el archivo no tiene contenido (no ha sido seleccionado) o si el nombre está vacío
+      //se manda un mensaje para que se llenen
+      if (!this.currentFile || this.deliverable.name === "") {
+        Notify.fillFields("uploadFile");
+      } else {
+        //se valida que el nombre no sea repetido (petición en API)
+        DeliverableService.existName(this.deliverable.name)
+          .then((response) => {
+            if (response.data===true) {
+              Notify.fillFields("valid-deliverable"); //mensaje de que el nombre ya esxiste
+            } else {
+              const formData = new FormData();
+              formData.append(`json`, `{"name":"${this.deliverable.name}"}`); //se agrega el json
+              formData.append("archivo", this.currentFile); //se agrega el archivo
+              DeliverableService.save(formData)
+                .then((response) => {
+                  Notify.done("deliverable");
+                  //limpieza de inputs
+                  this.currentFile = undefined;
+                  this.deliverable.name = "";
+
+                  //se manda a renderizar nuevamente la lista del $emit
+                  this.charge();
+                  this.dialog = false;
+                })
+                .catch((e) => {
+                  console.log(e);
+                  Notify.error("saveData");
+                });
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
+    },
+    getFile(e) {
+      this.currentFile = e;
+    },
+    charge() {
+      //se recibe el método de la vista que llama al componente
+      //se recibe con el nombre charge
+      this.$emit("charge");
+    },
   },
 };
 </script>
