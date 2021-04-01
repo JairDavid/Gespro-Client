@@ -129,13 +129,14 @@ export default {
         {
           text: "Lista de entregables",
           align: "start",
-          value: "deliverable.name",
+          value: "name",
         },
         { text: "Descargar archivo", align: "center", value: "down" },
         { text: "Subir avance", align: "center", value: "up" },
       ],
       deliverables: [],
       phases: [],
+      allData:[],
       currentFile: undefined,
       idAsignacion: 0,
       progress: {
@@ -166,14 +167,20 @@ export default {
       })
     },
     getPhases(id) {
+      //consulta a fase_tipo y regresa todos los elemetos según el tipo de proyecto
       ProjectPhaseService.searchIdProject(id)
         .then((response) => {
-          this.phases = response.data;
+          this.phases = response.data; //guarda los items de fase_tipo
           this.phases.map((item, i) => {
-            let idFase = item.id;
+            let idFase = item.id;//guarda idfase_tipo (idfase_proyecto en BD)
             DeliverableAssigmentService.searchDeliverable(idFase)
               .then((response) => {
-                this.deliverables.push(response.data);
+                this.allData = response.data;
+                //recorremos cada uno de los objetos de fase_tipo 
+                this.allData.map((entregable, j)=>{
+                  //console.log(entregable);
+                  this.deliverables.push(entregable.deliverable);
+                })
               })
               .catch((e) => {
                 console.log(e);
