@@ -34,7 +34,7 @@
   </div>
 </template>
 <script>
-/*
+
 import EmployeService from "../../../services/employe/service/ProgressService";
 import Notify from "../../../notifications/Notify";
 import AttachedResourceService from "../../../services/employe/service/AttachedResourceService";
@@ -77,5 +77,4 @@ export default {
     this.getAllProjects();
   },
 };
-*/
 </script>

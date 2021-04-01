@@ -112,7 +112,6 @@
   </div>
 </template>
 <script>
-/*
 import ProgressService from "../../../services/employe/service/ProgressService";
 import Notify from "../../../notifications/Notify";
 import DeliverableService from "../../../services/employe/service/DeliverableService";
@@ -222,5 +221,4 @@ export default {
     this.idProyecto = this.$route.params.proyecto;
   },
 };
-*/
 </script>
