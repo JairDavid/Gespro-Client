@@ -74,7 +74,7 @@
             elevation="2"
             color="blue-grey darken-1"
             text
-            @click="dialog = false"
+            @click="(dialog = false), limpiar()"
           >
             Cancelar
           </v-btn>
@@ -138,6 +138,11 @@ export default {
     };
   },
   methods: {
+    // Deja limpio las listas desplegables
+    limpiar(){
+      (this.Adscrito.project.id = 0), (this.Adscrito.labor.id = 0);
+
+    },
     // Obtener todos los proyectos en donde el empleado este registrado
     getAllProjectsAdscrito(id) {
       AttachedResourceService.getOneAdscritoProjects(id)
@@ -195,21 +200,18 @@ export default {
       let add = false;
       let flag = false;
 
-
-      if (
-        this.Adscrito.project.id < 1 ||
-        this.Adscrito.labor.id < 1
-      ) {
+      if (this.Adscrito.project.id < 1 || this.Adscrito.labor.id < 1) {
         Notify.fillFields("adscrito");
+        (this.Adscrito.project.id = 0), (this.Adscrito.labor.id = 0);
       } else {
-        
-      this.adscritoProyects.map((item, i) => {
-        this.idProjects[i] = item.project.id;
-      });
+        this.adscritoProyects.map((item, i) => {
+          this.idProjects[i] = item.project.id;
+        });
 
         for (let j = 0; j < this.idProjects.length; j++) {
           if (this.Adscrito.project.id === this.idProjects[j]) {
             Notify.fillFields("anotherAdd");
+            (this.Adscrito.project.id = 0), (this.Adscrito.labor.id = 0);
             flag = true;
           }
         }
