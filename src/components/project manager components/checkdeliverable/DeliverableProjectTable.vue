@@ -65,7 +65,7 @@
               rounded
               color="blueButton"
               dark
-              :href="`http://10.0.0.11:8080/entregable/descargar/${item.deliverable.id}`"
+              :href="`http://10.0.0.11:8080/entregable/descargar/${item.id}`" 
               
             >
               <v-icon> mdi-cloud-download </v-icon>
@@ -91,12 +91,13 @@ export default {
         { text: "Ver entregables", value: "entregables" },
       ],
       encabezado: [
-        { text: "Entregable", aling: "center", value: "deliverable.name" },
+        { text: "Entregable", aling: "center", value: "name" },
         { text: "Descargar", value :"descargar"}
       ],
       proyectos: [],
       fases: [],
       entregables: [],
+      dataFases: [],
 
       dialog: false,
       seeDataRow: {},
@@ -120,7 +121,7 @@ export default {
         });
     },
 
-    // Obtener todas las fases dependiendo del tipo de proyecto
+    // Obtiene todas las fases dependiendo del tipo de proyecto
     verEntregables(item) {
       let id = 0;
       let idPhase = 0
@@ -132,12 +133,17 @@ export default {
         .then((response) => {
           this.fases = response.data;
 
-          // Obtener todos los entregables que contienen las fases
+          // Obtiene todos los entregables que contienen las fases
           this.fases.map((item, i) =>{
             idPhase = item.id
             DeliverableAssigmentService.searchDeliverable(idPhase)
             .then(response =>{
-              this.entregables.push(response.data)
+              this.dataFases = response.data
+               
+               // Obtenemos solo los objetos de entregables que trae la data de "dataFases"
+              this.dataFases.map((item, j) =>{
+                this.entregables.push(item.deliverable);
+              })
 
             }).catch(e =>{
               console.log(e)
