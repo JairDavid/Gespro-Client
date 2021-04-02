@@ -37,7 +37,7 @@
           elevation="2"
           color="blue-grey darken-1"
           text
-          @click="dialog = false"
+          @click="dialog = false, clean();"
         >
           Cancelar
         </v-btn>
@@ -67,6 +67,11 @@ export default {
     };
   },
   methods: {
+    clean() {
+      //limpieza de inputs
+      this.currentFile = undefined;
+      this.deliverable.name = "";
+    },
     upload() {
       //validación: si el archivo no tiene contenido (no ha sido seleccionado) o si el nombre está vacío
       //se manda un mensaje para que se llenen
@@ -76,7 +81,7 @@ export default {
         //se valida que el nombre no sea repetido (petición en API)
         DeliverableService.existName(this.deliverable.name)
           .then((response) => {
-            if (response.data===true) {
+            if (response.data === true) {
               Notify.fillFields("valid-deliverable"); //mensaje de que el nombre ya esxiste
             } else {
               const formData = new FormData();
@@ -85,10 +90,7 @@ export default {
               DeliverableService.save(formData)
                 .then((response) => {
                   Notify.done("deliverable");
-                  //limpieza de inputs
-                  this.currentFile = undefined;
-                  this.deliverable.name = "";
-
+                  this.clean();
                   //se manda a renderizar nuevamente la lista del $emit
                   this.charge();
                   this.dialog = false;

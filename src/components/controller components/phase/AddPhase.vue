@@ -28,7 +28,7 @@
           elevation="2"
           color="blue-grey darken-1"
           text
-          @click="dialog = false"
+          @click="dialog = false, clean()"
         >
           Cancelar
         </v-btn>
@@ -47,13 +47,17 @@ export default {
   data() {
     return {
       phase: {
-        id: null, 
+        id: null,
         name: "",
       },
       dialog: false,
     };
   },
   methods: {
+    clean() {
+      this.phase.id = null;
+      this.phase.name = "";
+    },
     savePhase() {
       //Validación de campos vacios
       if (this.phase.name === "") {
@@ -69,10 +73,9 @@ export default {
               //Petición para guardar el proyecto
               PhaseService.save(this.phase)
                 .then((response) => {
-                  this.phase.id = null;
-                  this.phase.name = "";
                   //Toast de hecho
                   Notify.done("phase");
+                  this.clean();
                   this.dialog = false;
                   this.reload();
                 })
