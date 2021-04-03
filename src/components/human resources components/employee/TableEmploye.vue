@@ -20,7 +20,7 @@
       <v-data-table
         :headers="encabezado"
         :items="users"
-        :items-per-page="10"
+        :items-per-page="5"
         :search="search"
       >
         <template v-slot:[`item.editar`]="{ item }">
@@ -39,32 +39,43 @@
   </div>
 </template>
 <script>
+import Notify from '../../../notifications/Notify';
+import EmployeService from '../../../services/humanResource/service/EmployeService';
 export default {
   name: "TableEmploye",
   data() {
     return {
       search: "",
       encabezado: [
-        { text: "Nombre del empleado", align: "start", value: "name" },
-        { text: "Teléfono", align: "start", value: "telefono" },
+        { text: "Nombre del empleado", align: "start", value: "fullName" },
+        { text: "Teléfono", align: "start", value: "phoneNumber" },
         { text: "Curp", align: "start", value: "curp" },
         { text: "Modificar", value: "editar" },
         { text: "Eliminar", value: "eliminar" },
       ],
-      users: [
-        { name: "Abraham Cortez", telefono: "7772150348", curp: "PRUEBA12356" },
-        { name: "Alonso García", telefono: "7772150348", curp: "PRUEBA12356" },
-      ],
+      users: [],
       dialog: false,
     };
   },
   methods: {
-    eliminar() {
-      this.$router.push("/deleteEmploye");
+    eliminar(item) {
+      this.$router.push("/btnDeleteEmploye/"+ item.id);
     },
-    editar() {
-      this.$router.push("/updateEmploye");
+    editar(item) {
+      this.$router.push("/btnUpdateEmploye/" + item.id);
     },
+    getAllEmploye(){
+      EmployeService.listAll()
+      .then((response)=>{
+        this.users=response.data;
+      })
+      .catch((e)=>{
+        Notify.error("getData");
+      });
+    },
+  },
+  mounted(){
+    this.getAllEmploye();
   },
 };
 </script>

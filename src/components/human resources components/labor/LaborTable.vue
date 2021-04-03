@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="d-flex flex-row" style="margin-top: 2%; margin-bottom: 2%">
-      <AddLabor />
+     <!--@reload="" lo que va despues del arroba es como esta en nuestro 
+     componente y lo que esta en comillas el nombre del metodo -->
+      <AddLabor @reload="getAllLabor"/>
     </div>
     <v-card>
       <v-card-title>
@@ -18,7 +20,7 @@
       </v-card-title>
       <v-data-table
         :headers="encabezado"
-        :items="puesto"
+        :items="labors"
         :items-per-page="5"
         :search="search"
       >
@@ -44,12 +46,12 @@
           </span>
         </v-card-title>
         <v-card-text class="mt-5">
-          <span class="black--text">Asigne el nuevo nombre del puesto:</span>
           <v-text-field
             prepend-inner-icon="mdi-briefcase"
             outlined
-            label="Puesto"
             color="red"
+            v-model="editDataRow.name"
+            label="Puesto"
             class="mt-2"
           >
           </v-text-field>
@@ -61,7 +63,7 @@
             elevation="2"
             color="blue-grey darken-1"
             text
-            @click="dialog1 = false"
+            @click="(dialog1 = false), getAllLabor()"
           >
             Cancelar
           </v-btn>
@@ -69,7 +71,7 @@
             elevation="2"
             color="green darken-1"
             text
-            @click="dialog1 = false"
+            @click="editLabor()"
           >
             Guardar cambios
           </v-btn>
@@ -108,7 +110,7 @@
             elevation="2"
             color="green darken-1"
             text
-            @click="dialog2 = false"
+            @click="deleteLabor()"
           >
             Eliminar
           </v-btn>
@@ -118,6 +120,103 @@
   </div>
 </template>
 <script>
+import Notify from "../../../notifications/Notify";
+import LaborService from "../../../services/humanResource/service/LaborService";
+import AddLabor from "./AddLabor";
+export default {
+  name: "LaborTable",
+  components: {
+    AddLabor,
+  },
+  data() {
+    return {
+      labor:{
+        id:null,
+        name:"",
+      },
+      search: "",
+      encabezado: [
+        { text: "Nombre del puesto", align: "start", value: "name" },
+        { text: "Modificar", align: "center", value: "modificar" },
+        { text: "Eliminar", align: "center", value: "eliminar" },
+      ],
+      labors: [],
+      dialog1: false,
+      dialog2: false,
+      editDataRow: {},
+      deleteDataRow: {},
+      nameValidation:{}
+    };
+  },
+  methods: {
+    modificar(item) {
+      this.dialog1 = true;
+      this.editDataRow = item;
+    },
+    eliminar(item) {
+      this.dialog2 = true;
+      this.deleteDataRow = item;
+    },
+    deleteLabor() {
+      LaborService.eliminar(this.deleteDataRow.id)
+        .then((response) => {
+          Notify.done("deleteLabor");
+          this.getAllLabor();
+          this.dialog2 = false;
+        })
+        .catch((e) => {
+          
+          Notify.error("saveData")
+        });
+    },
+    consultarNombre(){
+      LaborService.getOneName(this.labor.name)
+      .then((response)=>{
+        this.nameValidation=response.data;
+        if(this.nameValidation===""){
+          return true;
+        }else{
+          return false;
+        }
+      })
+      .catch((e)=>{
+        console.log(e);
+      });
+    },
+    editLabor() {
+      if(this.editDataRow.name===""){
+        Notify.fillFields("updateLabor");
+      }else{
+        if(this.consultarNombre()===true){
+        LaborService.edit(this.editDataRow.id, this.editDataRow)
+          .then((response) => {
+            Notify.done("updateLabor");
+            this.dialog1=false;
+            this.getAllLabor();
+          })  
+          .catch((e) => {
+          Notify.error("saveData");0
+          });
+        }else{
+          Notify.fillFields("laborInvalid");
+        }
+      }
+    },
+    getAllLabor() {
+      LaborService.getAll()
+        .then((response) => {
+          this.labors = response.data;
+        })
+        .catch((e) => {
+          Notify.error("getData");
+        });
+    },
+  },
+  mounted() {
+    this.getAllLabor();
+  },
+};
+</script>
 import AddLabor from "./AddLabor";
 export default {
   name: "LaborTable",
