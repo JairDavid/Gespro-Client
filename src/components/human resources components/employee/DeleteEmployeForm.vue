@@ -205,6 +205,7 @@ export default {
     };
   },
   methods:{
+    //checa que tenga un objeto, si no manda este mensaje
     valid(){
       if (this.employe.id==="") {
         Notify.fillFields("employeSearch");
@@ -214,9 +215,12 @@ export default {
       }
     },
     deleteEmploye(){
+      //Manda a llamar a mi metodo eliminar por eso mando el id
       EmployeService.eliminar(this.employe.id)
       .then((response)=>{
+        //Manda mensaje de eliminacion
         Notify.done("deleteEmploye");
+        //Me redirecciona a mi tabla de ocnsulta general
         this.$router.push("/consultAll");
       })
       .catch((response)=>{
@@ -224,14 +228,19 @@ export default {
       });
     },
     searchByCurp(){
+      //busca que el campo no este vacio
       if (this.param==="") {
+        //Manda mensaje correspondiente
         Notify.fillFields("searchByCurp");
       } else {
+        //realiza la consulta con el parametro antes ingresado
         EmployeService.consultaCurp(this.param)
         .then((response)=>{
+          //Si no encuentra nada manda este mensaje
           if (response.data.curp=== undefined) {
             Notify.info("employeNotFund");
           } else {
+            //Si encuentra algo ya lo muestra
             this.employe=response.data;
           }   
         })
@@ -241,6 +250,7 @@ export default {
       }
     },
     getOne(id){
+      //Consulta con el id
       EmployeService.getOne(id)
       .then((response)=>{
         this.employe=response.data;
@@ -250,6 +260,7 @@ export default {
       });
     },
     regresar(){
+      //Me regresa a mi tabla de consulta general
       this.$router.push("/consultAll");
     },
   },

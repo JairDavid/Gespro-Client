@@ -46,6 +46,7 @@ export default {
   data() {
     return {
       search: "",
+      //Datos que se van a mostrar en la tabla
       encabezado: [
         { text: "Nombre del empleado", align: "start", value: "fullName" },
         { text: "Teléfono", align: "start", value: "phoneNumber" },
@@ -58,13 +59,16 @@ export default {
     };
   },
   methods: {
+    //Me redirecciona a la vista correspondiente
     eliminar(item) {
       this.$router.push("/btnDeleteEmploye/"+ item.id);
     },
     editar(item) {
+      //Me redirecciona a la vista correspondiente
       this.$router.push("/btnUpdateEmploye/" + item.id);
     },
     getAllEmploye(){
+      //Hace una consulta general de empleados
       EmployeService.listAll()
       .then((response)=>{
         this.users=response.data;

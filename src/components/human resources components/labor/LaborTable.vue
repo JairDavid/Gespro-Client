@@ -138,13 +138,18 @@ export default {
       labors: [],
       dialog1: false,
       dialog2: false,
+      //Objeto para editar
       editDataRow: {},
+      //Para eliminar
       deleteDataRow: {},
+      //Validacion
       nameValidation: {},
+      //Variable para guardar el nombre original
       originalName: "",
     };
   },
   methods: {
+    //asigna los datos a un objeto
     modificar(item) {
       this.dialog1 = true;
       this.editDataRow = item;
@@ -154,6 +159,7 @@ export default {
       this.deleteDataRow = item;
     },
     deleteLabor() {
+      //Elmina mediante el id
       LaborService.eliminar(this.deleteDataRow.id)
         .then((response) => {
           Notify.done("deleteLabor");
@@ -164,44 +170,36 @@ export default {
           Notify.error("saveData");
         });
     },
-    consultarNombre() {
-      if (this.labor.name === this.originalName) {
-        this.editLabor();
-      } else {
-        LaborService.getOneName(this.labor.name)
-          .then((response) => {
-            if (this.response.data === "") {
-              this.editLabor();
-            } else {
-              Notify.fillFields("laborInvalid");
-            }
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-      }
-    },
     editLabor() {
+      //Validacion de si esta vacio
       if (this.editDataRow.name === "") {
+        //Envia mensaje de que es necesario que este lleno
         Notify.fillFields("updateLabor");
       } else {
-        console.log(this.bool);
-        if (this.bool === true) {
-          LaborService.edit(this.editDataRow.id, this.editDataRow)
-            .then((response) => {
+        //Si no esta vacio llama al metodo el getName para buscar
+        LaborService.getName(this.editDataRow.name)
+        .then((response)=>{
+          //verifica si el nombre no es nulo o si esta vacio, si es nulo manda el mensaje
+          if(response.data===true){
+            Notify.fillFields("laborInvalid");
+          }else{
+            //Manda  llamar a mi metodo de editar en el cual le mando el id y despues mi objeto
+            LaborService.edit(this.editDataRow.id, this.editDataRow)
+            .then((response)=>{
               Notify.done("updateLabor");
-              this.dialog1 = false;
+              this.dialog1=false;
               this.getAllLabor();
             })
-            .catch((e) => {
-              Notify.error("saveData");
-              0;
+            .catch((e)=>{
+              console.log(e);
             });
-        } else {
-          Notify.fillFields("laborInvalid");
-        }
+          }
+        }).catch((e)=>{
+          console.log(e);
+        })
       }
     },
+    //consulta todos los puestos en la base de datos
     getAllLabor() {
       LaborService.getAll()
         .then((response) => {

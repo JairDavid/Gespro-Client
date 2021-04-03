@@ -19,5 +19,8 @@ class LaborService {
     getOneName(value){
         return API.get(`/consultaNombre/${value}`);
     }
+    getName(name){
+        return API.get(`/consultaPorNombre/${name}`);
+    }
 }
 export default new LaborService();

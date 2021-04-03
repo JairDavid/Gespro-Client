@@ -257,10 +257,10 @@ class Notify {
         text = 'El porcentaje total no cumple con el 100%.';
         break;
       case 'alertStatusFalse':
-        text = 'El usuario ya se encuentra inactivo';
+        text = 'El usuario ya se encontraba inactivo';
         break;
       case 'alertStatusTrue':
-        text = 'El usuario ya se encuentra activo';
+        text = 'El usuario ya se encontraba activo';
         break;
     }
     return Vue.$toast.info(text, {

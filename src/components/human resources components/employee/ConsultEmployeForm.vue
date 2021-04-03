@@ -165,15 +165,19 @@ export default {
     };
   },
   methods: {
+    //si esta vacio el parametro encia este mensaje
     searchByCurp() {
       if (this.param === "") {
         Notify.fillFields("searchEmploye");
       } else {
+        //En caso de no estar así hace una consulta
         EmployeService.consultaCurp(this.param)
           .then((response) => {
+            //Si no encuentra nada manda un mensaje
             if (response.data.id === undefined) {
               Notify.info("employeNotFund");
             } else {
+              //Y si encuentra algo ya se muestra
               this.employe = response.data;
             }
           })
@@ -183,6 +187,7 @@ export default {
           });
       }
     },
+    //reresa a mi tabla
     regresar() {
       this.$router.push("/consultAll");
     },

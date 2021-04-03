@@ -63,19 +63,23 @@ export default {
     };
   },
   methods: {
+    //Limpia la consola si se le da en cancelar
     limpiar() {
       this.labor.id = null;
       this.labor.name = "";
       this.reload();
     },
+    //valida que los campos no esten vacios
     nombreVacio() {
       if (this.labor.id === "" || this.labor.name === "") {
         Notify.fillFields("laborForm");
         this.dialog = true;
       } else {
+        //Manda a llamar a su metodo
         this.consultarName();
       }
     },
+    //verifica que el puesto no este antes registrado
     consultarName() {
       LaborService.getOneName(this.labor.name)
         .then((response) => {
@@ -91,12 +95,15 @@ export default {
           console.log(e);
         });
     },
+    //Si todo sale bien el puesto se añade 
     addLabor() {
       LaborService.getOneName(this.labor.name)
         .then((response) => {
+          //verifica si el nombre no es nulo o si esta vacio
           if (response.data === true) {
             Notify.fillFields("laborInvalid");
           } else {
+            //Manda a llamar a mi metodo de crear
             LaborService.create(this.labor)
               .then((response) => {
                 this.labor.id = null;
@@ -117,6 +124,5 @@ export default {
       this.$emit("reload");
     },
   },
-  mounted() {},
 };
 </script>

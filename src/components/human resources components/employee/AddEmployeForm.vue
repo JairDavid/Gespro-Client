@@ -72,7 +72,7 @@
           color="red"
           prepend-inner-icon="mdi-phone"
           v-model="employe.phoneNumber"
-          :rules="phoneRules"
+          :rules="[phoneRules.phoneRulesMax, phoneRules.phoneRulesMin]"
         ></v-text-field>
       </v-col>
 
@@ -134,6 +134,7 @@ export default {
   name: "AddEmployeForm",
   data() {
     return {
+      //Objeto principal
       employe: {
         id: null,
         fullName: "",
@@ -149,10 +150,13 @@ export default {
         password: "",
         status: 1,
       },
+      //Objeto para ser asignado mas adelante
       emailValidation: {},
+      //Objeto para ser asignado mas adelante
       curpValidation: {},
       employees: [],
       rol: [],
+      //Mensajes a mostrar si no se cumple la longitud establecida
       nameRules: [
         (v) =>
           v.length <= 128 || "El nombre debe tener menos de 128 caracteres",
@@ -164,10 +168,13 @@ export default {
         (v) =>
           v.length <= 45 || "El domicilio no puede tener más de 45 carácteres",
       ],
-      phoneRules: [
-        (v) =>
-          v.length <= 10 || "El número de teléfono debe tener máximo 10 dígitos",
-      ],
+      phoneRules: {
+        phoneRulesMin: (v) =>
+          v.length >= 5 || "El número de teléfono debe tener mínimo 5 dígitos",
+        phoneRulesMax: (v) =>
+          v.length <= 10 ||
+          "El número de teléfono debe tener máximo 10 dígitos",
+      },
       emailRules: [
         (v) =>
           v.length <= 45 || "El correo no puede tener más de 45 carácteres",
@@ -181,6 +188,10 @@ export default {
   methods: {
     camposVacios() {
       if (
+        //Checo si los campos estan vacios, se omitieron unos
+        //como lo es estado el cual por default es 1 (Esta activo)
+        //Es decir se encuentra activo y el otro es la contraseña,
+        //la cual es la misma que el correo, pero eso se realiza en el api
         this.employe.id === "" ||
         this.employe.fullName === "" ||
         this.employe.birthDate === "" ||
@@ -191,14 +202,16 @@ export default {
         this.employe.degree === "" ||
         this.employe.role.id === ""
       ) {
-        console.log(this.employe.fullName);
+        //De ser así envia un mensaje diciendo que es obligatorio
         Notify.fillFields("employeForm");
       } else {
+        //Y si no manda a llamar a la siguiente metodo para validar
         this.validarCampos();
       }
     },
     validarCampos() {
       if (
+        //Checo que cada uno de estos datos cumpla con la longitud disponible en la base de datos
         this.employe.fullName.length <= 128 &&
         this.employe.curp.length === 18 &&
         this.employe.phoneNumber.length <= 10 &&
@@ -207,18 +220,25 @@ export default {
         this.employe.adress.length <= 45 &&
         this.employe.degree.length <= 45
       ) {
+        //Si todo sale bien mando a llamar a mi siguiente metodo
         this.consultaCurp();
       } else {
+        //Y si no manda un mensaje diciendo que se chequen los datos
         Notify.fillFields("validationData");
       }
     },
     consultaCurp() {
+      //Mando a llamar a mi metodo consultar en el cual le mando el
+      //curp que tiene mi obj employe
       EmployeService.consultaCurp(this.employe.curp)
         .then((response) => {
+          //se asigna al objeto los resultados de la busqueda
           this.curpValidation = response.data;
+          //En caso de no tener nada se envia al siguiente metodo
           if (this.curpValidation === "") {
             this.consultaEmail();
           } else {
+            //Pero si coincide con otro manda mensaje diciendo que ya existe
             Notify.fillFields("curpInvalid");
           }
         })
@@ -227,12 +247,17 @@ export default {
         });
     },
     consultaEmail() {
+      //Mando a llamar a mi metodo consultar en el cual le mando el
+      //email que tiene mi obj employe
       EmployeService.consultaEmail(this.employe.email)
         .then((response) => {
+          //se asigna al objeto los resultados de la busqueda
           this.emailValidation = response.data;
+          //En caso de no tener nada se envia al siguiente metodo
           if (this.emailValidation === "") {
             this.addEmploye();
           } else {
+            //Pero si coincide con otro manda mensaje diciendo que ya existe
             Notify.fillFields("emailInvalid");
           }
         })
@@ -241,7 +266,8 @@ export default {
         });
     },
     addEmploye() {
-      this.employe.curp.toUpperCase;
+      //Mando a llamar a mi metodo el crear el cual va a guardar mis datos
+      //Aqui ya no es necesario hacer validaciones ya que todas estas se hicieron atras
       EmployeService.create(this.employe)
         .then((response) => {
           this.employe.id = null;
@@ -253,12 +279,14 @@ export default {
           this.employe.adress = "";
           this.employe.degree = "";
           this.employe.role.id = 0;
+          //Envia mensaje diciendo que se agrego
           Notify.done("employee");
         })
         .catch((e) => {
           Notify.error("saveData");
         });
     },
+    //Consulta a todos los roles
     getAllRol() {
       RolService.getAll()
         .then((response) => {
@@ -268,6 +296,7 @@ export default {
           Notify.error("getData");
         });
     },
+    //Consulta  a todos los empleados creo que no se usa, pero no quise mover xd
     getAllEmploye() {
       EmployeService.listAll()
         .then((response) => {
@@ -278,6 +307,7 @@ export default {
           Notify.error("getData");
         });
     },
+    //Me manda a la tabla de consulta general
     regresar() {
       this.$router.push("/consultAll");
     },

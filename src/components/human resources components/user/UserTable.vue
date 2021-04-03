@@ -21,12 +21,7 @@
         :items="users"
         :items-per-page="5"
         :search="search"
-      >
-        <!--
-      <template v-slot:[`item.estado?"Activo":"Inactivo"`]="{item}"> 
-          <span>{{estado}}</span>
-      </template>
-      -->
+      >s
         <template v-slot:[`item.activar`]="{ item }">
           <v-btn rounded color="blueButton" @click="activar(item)">
             <v-icon class="white--text">mdi-account-plus</v-icon>
@@ -227,6 +222,7 @@ export default {
       this.dialog1 = true;
       this.activeDataRow = item;
     },
+    //consulta todos los empleados
     getAllEmploye() {
       EmployeService.listAll()
         .then((response) => {
@@ -249,6 +245,7 @@ export default {
         this.dialog2=true;
         this.getAllEmploye();
       }else{
+        //Le manda el id y despues manda todo el objeto nuevo(en este caso solo manda la contraseña)
       EmployeService.edit(this.editDataRow.id, this.editDataRow)
         .then((response) => {
           Notify.done("password");

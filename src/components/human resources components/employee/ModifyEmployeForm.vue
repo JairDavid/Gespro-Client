@@ -201,34 +201,33 @@ export default {
         password: "",
         status: 1,
       },
-      param:"",
-      dialog:false,
+      //parametro de busqueda con el cual puedo consultar un curp existente
+      param: "",
+      dialog: false,
       employees: [],
-      curpOriginal:"",
-      curpValidation:{},
+      //curp original se usa para guardar el curp de busqeuda, mas adelante se explica
+      curpOriginal: "",
+      //Objeto el cual uso para asignar los datos de una consulta es posible que no lo use
+      curpValidation: {},
       rol: [],
-       nameRules: [
+      //Mensajes a mostrar si no se cumple la longitud establecida
+      nameRules: [
         (v) =>
           v.length <= 128 || "El nombre debe tener menos de 128 caracteres",
       ],
       curpRules: [
-        (v) => (v.length <= 18 || "El Curp debe de tener 18 carácteres"),
+        (v) => v.length <= 18 || "El Curp debe de tener 18 carácteres",
       ],
       adressRules: [
         (v) =>
-          v.length <= 45 ||
-          "El domicilio no puede tener más de 45 carácteres",
+          v.length <= 45 || "El domicilio no puede tener más de 45 carácteres",
       ],
-      phoneRules:{
-        phoneRulesMin:
-        (v)=>
-        v.length>=5 || "El número de teléfono debe tener mínimo 5 dígitos"
-      ,
-      phoneRulesMax: 
-        (v) =>
+      phoneRules: {
+        phoneRulesMin: (v) =>
+          v.length >= 5 || "El número de teléfono debe tener mínimo 5 dígitos",
+        phoneRulesMax: (v) =>
           v.length <= 10 ||
           "El número de teléfono debe tener máximo 10 dígitos",
-      
       },
       degreeRules: [
         (v) =>
@@ -238,6 +237,11 @@ export default {
   },
   methods: {
     camposVacios() {
+      //Checo si los campos estan vacios, se omitieron unos
+      //como lo es estado el cual por default es 1 (Esta activo)
+      //Es decir se encuentra activo, otro es la contraseña,
+      //la cual es la misma que el correo, pero eso se realiza en el api
+      //tambien el correo y el rol ya que esto no pueden modificarse
       if (
         this.employe.fullName === "" ||
         this.employe.birthDate === "" ||
@@ -246,13 +250,15 @@ export default {
         this.employe.adress === "" ||
         this.employe.degree === ""
       ) {
-        console.log(this.employe.fullName);
+        //De ser así envia un mensaje diciendo que es obligatorio
         Notify.fillFields("employeForm");
       } else {
+        //Y si no manda a llamar a la siguiente metodo para validar
         this.validarCampos();
       }
     },
     validarCampos() {
+      //Checo que cada uno de estos datos cumpla con la longitud disponible en la base de datos
       if (
         this.employe.fullName.length <= 128 &&
         this.employe.curp.length === 18 &&
@@ -261,31 +267,51 @@ export default {
         this.employe.adress.length <= 45 &&
         this.employe.degree.length <= 45
       ) {
+        //Si todo sale bien mando a llamar a mi siguiente metodo
         this.consultaCurp();
       } else {
+        //Y si no manda un mensaje diciendo que se chequen los datos
         Notify.fillFields("validationData");
       }
     },
-    consultaCurp() {      
-      if(this.employe.curp===this.curpOriginal){
-          this.updateEmploye();
-      }else{
+    //Consulto por el id
+    getOne(id) {
+      //Le mando el id
+      EmployeService.getOne(id)
+        .then((response) => {
+          //Asigno lo de mi objeto a response data
+          this.employe = response.data;
+          //Y aqui solo guardo el curp ya que es el que nos interesa
+          this.curpOriginal = response.data.curp;
+        })
+        .catch((e) => {
+          Notify.error("getData");
+        });
+    },
+    consultaCurp() {
+      //Checa si el curp del empleado coincide con el que habia guardado
+      if (this.employe.curp === this.curpOriginal) {
+        //Mando a llamar a mi método
+        this.updateEmploye();
+      } else {
+        //Mando el curo de mi objeto
         EmployeService.consultaCurp(this.employe.curp)
           .then((response) => {
-            if (response.data==="") {
-              this.updateEmploye();          
+            //En caso de no tener nada manda a llamar a mi metodo de actualizar
+            if (response.data === "") {
+              this.updateEmploye();
             } else {
+              // Y si no le envia un mensaje
               Notify.fillFields("curpInvalid");
             }
           })
           .catch((e) => {
             console.log(e);
           });
-        
-
       }
     },
     valid() {
+      //En caso de que el id sea nulo se envia un mensaje
       if (this.employe.id === null) {
         Notify.fillFields("searchEmploye");
         this.dialog = false;
@@ -294,8 +320,8 @@ export default {
       }
     },
     updateEmploye() {
-      EmployeService.edit(this.employe.id, this.employe)
-      .then((response) => {
+      //Se actualiza mando el id y despues el objeto
+      EmployeService.edit(this.employe.id, this.employe).then((response) => {
         this.employe.id = null;
         this.employe.firstName = "";
         this.employe.lastName = "";
@@ -309,22 +335,27 @@ export default {
       });
     },
     searchByCurp() {
+      //Mando el parametro con el cual mando a traer mi objeto correpondiente
       if (this.param === "") {
+        //Si no encuentra ese curp en alguno de mis empleados manda este mensaje
         Notify.fillFields("searchEmploye");
       } else {
+        //Y si no esta vacio compara que el metodo 
         EmployeService.consultaCurp(this.param)
-        .then((response) => {
-          if (response.data.id === undefined) {
-            Notify.info("employeNotFund");
-          } else {
-            this.employe=response.data;
-          }
-        })
-        .catch((response)=>{
-          Notify.error("getData");
-        });
+          .then((response) => {
+            //En caso de no encontrar nada le envia el mensaje
+            if (response.data.id === undefined) {
+              Notify.info("employeNotFund");
+            } else {
+              this.employe = response.data;
+            }
+          })
+          .catch((response) => {
+            Notify.error("getData");
+          });
       }
     },
+    //consulta general a roles
     getAllRol() {
       RolService.getAll()
         .then((response) => {
@@ -336,25 +367,14 @@ export default {
           console.log(e);
         });
     },
-    getOne(id){
-      
-      EmployeService.getOne(id)
-      .then((response)=>{
-        this.employe=response.data;
-        this.curpOriginal=response.data.curp;
-      })
-      .catch((response)=>{
-        Notify.error("getData");
-      });
-    },
-    regresar(){
+    //me regresa a la tabla de consulta general
+    regresar() {
       this.$router.push("/consultAll");
     },
   },
   mounted() {
-    if(this.$route.params.id==undefined){
-
-    }else{
+    if (this.$route.params.id == undefined) {
+    } else {
       this.getOne(this.$route.params.id);
     }
   },
