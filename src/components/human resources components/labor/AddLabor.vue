@@ -13,13 +13,13 @@
         </span>
       </v-card-title>
       <v-card-text class="mt-5">
-        <span class="black--text"> Ingrese el nombre del puesto:</span>
         <v-text-field
           prepend-inner-icon="mdi-briefcase"
           outlined
           label="Puesto"
           color="red"
           class="mt-2"
+          v-model="labor.name"
         >
         </v-text-field>
       </v-card-text>
@@ -30,7 +30,7 @@
           elevation="2"
           color="blue-grey darken-1"
           text
-          @click="dialog = false"
+          @click="(dialog = false), limpiar()"
         >
           Cancelar
         </v-btn>
@@ -38,21 +38,85 @@
           elevation="2"
           color="green darken-1"
           text
-          @click="dialog = false"
+          @click="(dialog = false), nombreVacio()"
         >
-          Guardar cambios
+          Guardar
         </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 <script>
+import Notify from "../../../notifications/Notify";
+import LaborService from "../../../services/humanResource/service/LaborService";
 export default {
   name: "AddLabor",
   data() {
     return {
+      labor: {
+        id: null,
+        name: "",
+      },
+      nameValidation: {},
+      labors: [],
       dialog: false,
     };
   },
+  methods: {
+    limpiar() {
+      this.labor.id = null;
+      this.labor.name = "";
+      this.reload();
+    },
+    nombreVacio() {
+      if (this.labor.id === "" || this.labor.name === "") {
+        Notify.fillFields("laborForm");
+        this.dialog = true;
+      } else {
+        this.consultarName();
+      }
+    },
+    consultarName() {
+      LaborService.getOneName(this.labor.name)
+        .then((response) => {
+          this.nameValidation = response.data;
+          if (this.nameValidation === "") {
+            this.addLabor();
+          } else {
+            this.dialog = true;
+            Notify.fillFields("laborInvalid");
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    addLabor() {
+      LaborService.getOneName(this.labor.name)
+        .then((response) => {
+          if (response.data === true) {
+            Notify.fillFields("laborInvalid");
+          } else {
+            LaborService.create(this.labor)
+              .then((response) => {
+                this.labor.id = null;
+                this.labor.name = "";
+                Notify.done("labor");
+                this.reload();
+              })
+              .catch((e) => {
+                Notify.error("saveData");
+                this.reload();
+              });
+          }
+        })
+        .catch((e) => {});
+    },
+    reload() {
+      //emit trae los datos provenientes de otra vista
+      this.$emit("reload");
+    },
+  },
+  mounted() {},
 };
 </script>

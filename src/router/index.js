@@ -98,6 +98,11 @@ const routes = [
     component: () => import('../views/human resources views/Employe/DeleteEmploye.vue')
   },
   {
+    path: '/btnDeleteEmploye/:id',
+    name: 'btnEliminarEmpleado',
+    component: ()=> import('../views/human resources views/Employe/DeleteEmploye.vue')
+  },
+  {
     path: '/consultEmploye',
     name: 'consultaEmpleado',
     component: () => import('../views/human resources views/Employe/ConsultEmploye.vue')
@@ -111,6 +116,11 @@ const routes = [
     path: '/updateEmploye',
     name: 'actualizarEmpleado',
     component: () => import('../views/human resources views/Employe/ModifyEmploye.vue')
+  },
+  {
+    path: '/btnUpdateEmploye/:id',
+    name:'btnEditarEmpleado',
+    component: ()=> import('../views/human resources views/Employe/ModifyEmploye.vue')
   },
   {
     path: '/labor',

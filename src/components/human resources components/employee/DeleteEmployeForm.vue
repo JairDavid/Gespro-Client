@@ -19,26 +19,31 @@
           color="red"
           placeholder="Curp"
           prepend-inner-icon="mdi-magnify"
+          v-model="param"
         ></v-text-field>
       </v-col>
       <v-col class="mt-2" cols="12" sm="6" md="1">
-        <v-btn color="red" rounded>
+        <v-btn color="red" rounded @click="searchByCurp()">
           <span class="white--text">Buscar</span>
         </v-btn>
       </v-col>
     </v-row>
 
-    <v-row align="center" justify="center">
-      <v-col cols="12" sm="6" md="6">
-        <h6 class="mt-2 subtitle-1">Nombre del empleado:</h6>
+    <v-row no-gutters>
+      <v-col cols="12" sm="8">
+        <h6 class="subtitle-1">Nombre del empleado:</h6>
         <v-text-field
           outlined
           dense
           disabled
           color="red"
           prepend-inner-icon="mdi-account-circle"
+          v-model="employe.fullName"
         ></v-text-field>
+      </v-col>
+      <v-col cols="12" sm="1"></v-col>
 
+      <v-col cols="12" sm="3">
         <h6 class="subtitle-1">CURP:</h6>
         <v-text-field
           disabled
@@ -46,8 +51,10 @@
           dense
           color="red"
           prepend-inner-icon="mdi-account-box"
+          v-model="employe.curp"
         ></v-text-field>
-
+      </v-col>
+      <v-col cols="12" sm="3">
         <h6 class="subtitle-1">Fecha de nacimiento:</h6>
         <v-text-field
           disabled
@@ -56,28 +63,11 @@
           dense
           color="red"
           prepend-inner-icon="mdi-calendar"
-        ></v-text-field>
-        <h6 class="subtitle-1">Correo electrónico:</h6>
-        <v-text-field
-          disabled
-          type="email"
-          outlined
-          dense
-          color="red"
-          prepend-inner-icon="mdi-email"
+          v-model="employe.birthDate"
         ></v-text-field>
       </v-col>
-
-      <v-col cols="12" sm="6" md="6">
-        <h6 class="subtitle-1 mt-2">Apellido(s):</h6>
-        <v-text-field
-          disabled
-          outlined
-          dense
-          color="red"
-          prepend-inner-icon="mdi-account-circle"
-        ></v-text-field>
-
+      <v-col cols="12" sm="1"></v-col>
+      <v-col cols="12" sm="4">
         <h6 class="subtitle-1">Dirección:</h6>
         <v-text-field
           disabled
@@ -85,8 +75,11 @@
           dense
           color="red"
           prepend-inner-icon="mdi-home"
+          v-model="employe.adress"
         ></v-text-field>
-
+      </v-col>
+      <v-col cols="12" sm="1"></v-col>
+      <v-col cols="12" sm="3">
         <h6 class="subtitle-1">Teléfono:</h6>
         <v-text-field
           disabled
@@ -95,38 +88,177 @@
           dense
           color="red"
           prepend-inner-icon="mdi-phone"
+          v-model="employe.phoneNumber"
         ></v-text-field>
+      </v-col>
+      <v-col cols="12" sm="3">
+        <h6 class="subtitle-1">Grado de estudios:</h6>
+        <v-text-field
+          disabled
+          outlined
+          dense
+          color="red"
+          prepend-inner-icon="mdi-school"
+          v-model="employe.degree"
+        ></v-text-field>
+      </v-col>
+      <v-col cols="12" sm="1"></v-col>
 
+      <v-col cols="12" sm="4">
+        <h6 class="subtitle-1">Correo electrónico:</h6>
+        <v-text-field
+          disabled
+          type="email"
+          outlined
+          dense
+          color="red"
+          prepend-inner-icon="mdi-email"
+          v-model="employe.email"
+        ></v-text-field>
+      </v-col>
+      <v-col cols="12" sm="1"></v-col>
+      <v-col cols="12" sm="3">
         <h6 class="subtitle-1">Rol:</h6>
         <v-select
           disabled
           outlined
           dense
           color="red"
-          prepend-inner-icon="mdi-briefcase"
+          prepend-inner-icon="mdi-account-supervisor"
+          :label="employe.role.name"
         ></v-select>
       </v-col>
 
-      <v-col cols="12" sm="4">
-        <v-row class="pb-4" align="center" justify="center">
-          <v-btn color="grayButton" rounded>
-            <span class="black--text">Regresar</span>
-          </v-btn>
-
-          <v-btn color="red" rounded class="ml-2">
-            <span class="mr-1 ml-1 white--text">Eliminar Empleado</span>
-          </v-btn>
-        </v-row>
-      </v-col>
     </v-row>
+      <v-row align="center" justify="center">
+        <v-btn color="grayButton" rounded @click="regresar()">
+          <span class="black--text">Regresar</span>
+        </v-btn>
+        <v-btn color="red" rounded class="ml-2" @click="valid()">
+          <span class="mr-1 ml-1 white--text">Eliminar Empleado</span>
+        </v-btn>
+
+        <v-dialog v-model="dialog" width="600" persistent>
+            <v-card class="rounded-lg">
+              <v-card-title class="red">
+                <span class="headline" style="color: white">
+                  <v-icon color="white">mdi-delete</v-icon>¿Estás seguro que
+                  quieres eliminar {{ this.employe.fullName }}?
+                </span>
+              </v-card-title>
+              <v-card-text class="mt-5">
+                <span class="black--text">
+                  Esto será de forma permanente, verifica los datos antes de
+                  eliminar.</span
+                >
+              </v-card-text>
+              <v-divider></v-divider>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  elevation="2"
+                  color="blue-grey darken-1"
+                  text
+                  @click="dialog = false"
+                >
+                  Regresar
+                </v-btn>
+                <v-btn
+                  elevation="2"
+                  color="green darken-1"
+                  text
+                  @click="(dialog = false), deleteEmploye()"
+                >
+                  Eliminar
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+      </v-row>
   </v-container>
 </template>
 
 <script>
+import Notify from '../../../notifications/Notify';
+import EmployeService from '../../../services/humanResource/service/EmployeService';
 export default {
   name: "DeleteEmployeForm",
   data() {
-    return {};
+    return {
+      employe: {
+        id: null,
+        fullName: "",
+        birthDate: "",
+        phoneNumber: "",
+        curp: "",
+        email: "",
+        adress: "",
+        degree: "",
+        role: {
+          name: "",
+        },
+        password: "",
+        status: 1,
+      },
+      param:"",
+      dialog:false,
+    };
   },
+  methods:{
+    valid(){
+      if (this.employe.id==="") {
+        Notify.fillFields("employeSearch");
+        this.dialog=false;
+      } else {
+        this.dialog=true;
+      }
+    },
+    deleteEmploye(){
+      EmployeService.eliminar(this.employe.id)
+      .then((response)=>{
+        Notify.done("deleteEmploye");
+        this.$router.push("/consultAll");
+      })
+      .catch((response)=>{
+          Notify.error("deleteData");
+      });
+    },
+    searchByCurp(){
+      if (this.param==="") {
+        Notify.fillFields("searchByCurp");
+      } else {
+        EmployeService.consultaCurp(this.param)
+        .then((response)=>{
+          if (response.data.curp=== undefined) {
+            Notify.info("employeNotFund");
+          } else {
+            this.employe=response.data;
+          }   
+        })
+        .catch((response)=>{
+          Notify.error("getData");
+        });
+      }
+    },
+    getOne(id){
+      EmployeService.getOne(id)
+      .then((response)=>{
+        this.employe=response.data;
+      })
+      .catch((response)=>{
+        Notify.error("getData");
+      });
+    },
+    regresar(){
+      this.$router.push("/consultAll");
+    },
+  },
+  mounted(){
+    if(this.$route.params.id==undefined){
+
+    }else{
+      this.getOne(this.$route.params.id);
+    }
+}
 };
 </script>
