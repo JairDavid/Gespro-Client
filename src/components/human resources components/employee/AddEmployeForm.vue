@@ -281,6 +281,7 @@ export default {
           this.employe.role.id = 0;
           //Envia mensaje diciendo que se agrego
           Notify.done("employee");
+          this.$router.push("/consultAll");
         })
         .catch((e) => {
           Notify.error("saveData");
