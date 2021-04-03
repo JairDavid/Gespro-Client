@@ -1,5 +1,5 @@
-import Vue from "vue";
-import "vue-toastification/dist/index.css";
+import Vue from 'vue';
+import 'vue-toastification/dist/index.css';
 class Notify {
   fillFields(message) {
     let text = '';
@@ -58,9 +58,45 @@ class Notify {
       case 'saveProgress':
         text = 'Archivo y Comentario son obligatorios'
         break;
+      case 'employeForm':
+        text = 'Todos los campos son obligatorios';
+        break;
+      case 'employeSearch':
+        text = 'Primero debes de buscar un empleado';
+        break;
+      case 'searchByCurp':
+        text = 'Debes de ingresar el curp del empleado';
+        break;
+      case 'laborForm':
+        text = 'El campo de nombre es obligatorio';
+        break;
+      case 'userForm':
+        text = 'El campo de curp es obligatorio';
+        break;
+      case 'searchEmploye':
+        text = 'Primero debes buscar un empleado';
+        break;
+      case 'updateLabor':
+        text = 'Debes ingresar un nombre al puesto';
+        break;
+      case 'updatePassword':
+        text = 'El campo contraseña es obligatorio';
+        break;
+      case 'validationData':
+        text = 'Verifique que todos los datos estén correctos';
+        break;
+      case 'curpInvalid':
+        text = 'El curp ingresado ya esta registrado favor de intentar con otro';
+        break;
+      case 'emailInvalid':
+        text = 'El correo ingresado ya esta registrado favor de intentar con otro';
+        break;
+      case 'laborInvalid':
+        text = 'El puesto ingresado ya esta registrado favor de intentar con otro';
+        break;
     }
     return Vue.$toast.warning(text, {
-      position: "bottom-right",
+      position: 'bottom-right',
       timeout: 2381,
       closeOnClick: true,
       pauseOnFocusLoss: true,
@@ -69,7 +105,7 @@ class Notify {
       draggablePercent: 0.6,
       showCloseButtonOnHover: false,
       hideProgressBar: true,
-      closeButton: "button",
+      closeButton: 'button',
       icon: true,
       rtl: false,
     })
@@ -84,10 +120,10 @@ class Notify {
         text = 'Empleado agregado'
         break;
       case 'type':
-        text = "Tipo agregado"
+        text = 'Tipo agregado'
         break;
       case 'deliverable':
-        text = "Entregable agregado"
+        text = 'Entregable agregado'
         break;
       case 'phase':
         text = 'Fase agregada'
@@ -119,9 +155,30 @@ class Notify {
       case 'progress':
         text = 'Avance agregado'
         break;
+      case 'labor':
+        text = 'Puesto agregado';
+        break;
+      case 'updateEmploye':
+        text = 'Empleado actualizado';
+        break;
+      case 'statusUpdate':
+        text = 'El estado se ha actualizado';
+        break;
+      case 'updateLabor':
+        text = 'Puesto actualizado';
+        break;
+      case 'deleteLabor':
+        text = 'Puesto eliminado';
+        break;
+      case 'deleteEmploye':
+        text = 'Empleado eliminado';
+        break;
+      case 'password':
+        text = 'Contraseña actualizada';
+        break;
     }
     return Vue.$toast.success(text + ' correctamente.', {
-      position: "bottom-right",
+      position: 'bottom-right',
       timeout: 2381,
       closeOnClick: true,
       pauseOnFocusLoss: true,
@@ -130,7 +187,7 @@ class Notify {
       draggablePercent: 0.6,
       showCloseButtonOnHover: false,
       hideProgressBar: true,
-      closeButton: "button",
+      closeButton: 'button',
       icon: true,
       rtl: false,
     })
@@ -138,33 +195,36 @@ class Notify {
   error(message) {
     let text;
     switch (message) {
-      case "add":
-        text = "al agregar, verifique los datos.";
+      case 'add':
+        text = 'al agregar, verifique los datos.';
         break;
-      case "delete":
-        text = "al borrar, verifique los datos.";
+      case 'delete':
+        text = 'al borrar, verifique los datos.';
         break;
-      case "update":
-        text = "al actualizar, verifique los datos.";
+      case 'update':
+        text = 'al actualizar, verifique los datos.';
         break;
-      case "search":
-        text = "al buscar, verifique los datos.";
+      case 'search':
+        text = 'al buscar, verifique los datos.';
         break;
-      case "getData":
-        text = "interno al obtener los datos";
+      case 'getData':
+        text = 'interno al obtener los datos';
         break;
-      case "saveData":
-        text = "interno al guardar los datos.";
+      case 'saveData':
+        text = 'interno al guardar los datos.';
         break;
-      case "deleteData":
-        text = "interno al eliminar los datos.";
+      case 'deleteData':
+        text = 'interno al eliminar los datos.';
         break;
-      case "updateData":
-        text = "interno al actualizar los datos.";
+      case 'updateData':
+        text = 'interno al actualizar los datos.';
+        break;
+      case 'errorStatus':
+        text = 'al actualizar el estado';
         break;
     }
-    return Vue.$toast.error("Ocurrió un error " + text, {
-      position: "bottom-right",
+    return Vue.$toast.error('Ocurrió un error ' + text, {
+      position: 'bottom-right',
       timeout: 2381,
       closeOnClick: true,
       pauseOnFocusLoss: true,
@@ -173,7 +233,7 @@ class Notify {
       draggablePercent: 0.6,
       showCloseButtonOnHover: false,
       hideProgressBar: true,
-      closeButton: "button",
+      closeButton: 'button',
       icon: true,
       rtl: false,
     });
@@ -181,6 +241,9 @@ class Notify {
   info(message) {
     let text = '';
     switch (message) {
+      case 'employeNotFund':
+        text = 'No se ha encontrado ningún empleado con ese curp.';
+        break;
       case 'outOfRange':
         text = 'Las fases ya suman un total de 100%.';
         break;
@@ -193,9 +256,15 @@ class Notify {
       case 'incomplete':
         text = 'El porcentaje total no cumple con el 100%.';
         break;
+      case 'alertStatusFalse':
+        text = 'El usuario ya se encuentra inactivo';
+        break;
+      case 'alertStatusTrue':
+        text = 'El usuario ya se encuentra activo';
+        break;
     }
     return Vue.$toast.info(text, {
-      position: "bottom-right",
+      position: 'bottom-right',
       timeout: 2381,
       closeOnClick: true,
       pauseOnFocusLoss: true,
@@ -204,7 +273,7 @@ class Notify {
       draggablePercent: 0.6,
       showCloseButtonOnHover: false,
       hideProgressBar: true,
-      closeButton: "button",
+      closeButton: 'button',
       icon: true,
       rtl: false,
     });

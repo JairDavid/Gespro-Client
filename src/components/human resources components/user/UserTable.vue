@@ -242,11 +242,6 @@ export default {
           Notify.error("getData");
         });
     },
-    estado(status) {
-      if (status === true) {
-        return "Activo";
-      }
-    },
     //Actualiza la contraseña
     updatePassword() {
       if(this.editDataRow.password===""){

@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="d-flex flex-row" style="margin-top: 2%; margin-bottom: 2%">
-     <!--@reload="" lo que va despues del arroba es como esta en nuestro 
+      <!--@reload="" lo que va despues del arroba es como esta en nuestro 
      componente y lo que esta en comillas el nombre del metodo -->
-      <AddLabor @reload="getAllLabor"/>
+      <AddLabor @reload="getAllLabor" />
     </div>
     <v-card>
       <v-card-title>
@@ -67,12 +67,7 @@
           >
             Cancelar
           </v-btn>
-          <v-btn
-            elevation="2"
-            color="green darken-1"
-            text
-            @click="editLabor()"
-          >
+          <v-btn elevation="2" color="green darken-1" text @click="editLabor()">
             Guardar cambios
           </v-btn>
         </v-card-actions>
@@ -130,9 +125,9 @@ export default {
   },
   data() {
     return {
-      labor:{
-        id:null,
-        name:"",
+      labor: {
+        id: null,
+        name: "",
       },
       search: "",
       encabezado: [
@@ -145,7 +140,8 @@ export default {
       dialog2: false,
       editDataRow: {},
       deleteDataRow: {},
-      nameValidation:{}
+      nameValidation: {},
+      originalName: "",
     };
   },
   methods: {
@@ -165,39 +161,43 @@ export default {
           this.dialog2 = false;
         })
         .catch((e) => {
-          
-          Notify.error("saveData")
+          Notify.error("saveData");
         });
     },
-    consultarNombre(){
-      LaborService.getOneName(this.labor.name)
-      .then((response)=>{
-        this.nameValidation=response.data;
-        if(this.nameValidation===""){
-          return true;
-        }else{
-          return false;
-        }
-      })
-      .catch((e)=>{
-        console.log(e);
-      });
+    consultarNombre() {
+      if (this.labor.name === this.originalName) {
+        this.editLabor();
+      } else {
+        LaborService.getOneName(this.labor.name)
+          .then((response) => {
+            if (this.response.data === "") {
+              this.editLabor();
+            } else {
+              Notify.fillFields("laborInvalid");
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
     },
     editLabor() {
-      if(this.editDataRow.name===""){
+      if (this.editDataRow.name === "") {
         Notify.fillFields("updateLabor");
-      }else{
-        if(this.consultarNombre()===true){
-        LaborService.edit(this.editDataRow.id, this.editDataRow)
-          .then((response) => {
-            Notify.done("updateLabor");
-            this.dialog1=false;
-            this.getAllLabor();
-          })  
-          .catch((e) => {
-          Notify.error("saveData");0
-          });
-        }else{
+      } else {
+        console.log(this.bool);
+        if (this.bool === true) {
+          LaborService.edit(this.editDataRow.id, this.editDataRow)
+            .then((response) => {
+              Notify.done("updateLabor");
+              this.dialog1 = false;
+              this.getAllLabor();
+            })
+            .catch((e) => {
+              Notify.error("saveData");
+              0;
+            });
+        } else {
           Notify.fillFields("laborInvalid");
         }
       }
