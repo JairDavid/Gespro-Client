@@ -362,7 +362,7 @@ export default {
           }
         }
       }
-      console.log(this.acum);
+      
     },
     //
     cancel() {
@@ -393,7 +393,6 @@ export default {
         TypePhaseService.save(fase_tipo)
           .then((response) => {
             console.log(response.data);
-            alert(response.data);
             let idfasetipo = response.data.id;
             let porcentajeIndividual =
               response.data.percent / item.entregables.length;
@@ -422,6 +421,7 @@ export default {
             console.log(e);
           });
       });
+      Notify.done("typeContent");
     },
     getNotAssigned() {
       ControllerService.listNotAssigned()

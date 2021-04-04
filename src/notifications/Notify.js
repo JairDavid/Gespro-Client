@@ -176,6 +176,9 @@ class Notify {
       case 'password':
         text = 'Contraseña actualizada';
         break;
+      case 'typeContent':
+        text = 'Contenido registrado';
+        break;
     }
     return Vue.$toast.success(text + ' correctamente.', {
       position: 'bottom-right',

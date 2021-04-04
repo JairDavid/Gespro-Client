@@ -97,7 +97,7 @@
           color="red"
           prepend-inner-icon="mdi-email"
           v-model="employe.email"
-          :rules="emailRules"
+          :rules="[emailRules.lengthMin, emailRules.format]"
         ></v-text-field>
       </v-col>
       <v-col cols="12" sm="1"></v-col>
@@ -150,11 +150,13 @@ export default {
         password: "",
         status: 1,
       },
+      validFormat: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
       //Objeto para ser asignado mas adelante
       emailValidation: {},
       //Objeto para ser asignado mas adelante
       curpValidation: {},
       employees: [],
+      //para validar el formato del correo
       rol: [],
       //Mensajes a mostrar si no se cumple la longitud establecida
       nameRules: [
@@ -175,10 +177,11 @@ export default {
           v.length <= 10 ||
           "El número de teléfono debe tener máximo 10 dígitos",
       },
-      emailRules: [
-        (v) =>
+      emailRules: {
+        lengthMin: (v) =>
           v.length <= 45 || "El correo no puede tener más de 45 carácteres",
-      ],
+        format: (v) => this.validFormat.test(v) || "Formato inválido",
+      },
       degreeRules: [
         (v) =>
           v.length <= 45 || "El correo no puede tener más de 45 carácteres",
@@ -210,6 +213,7 @@ export default {
       }
     },
     validarCampos() {
+      console.log(this.validFormat.test(this.employe.email));
       if (
         //Checo que cada uno de estos datos cumpla con la longitud disponible en la base de datos
         this.employe.fullName.length <= 128 &&
@@ -217,6 +221,7 @@ export default {
         this.employe.phoneNumber.length <= 10 &&
         this.employe.phoneNumber.length >= 5 &&
         this.employe.email.length <= 45 &&
+        this.validFormat.test(this.employe.email) &&
         this.employe.adress.length <= 45 &&
         this.employe.degree.length <= 45
       ) {
@@ -268,6 +273,7 @@ export default {
     addEmploye() {
       //Mando a llamar a mi metodo el crear el cual va a guardar mis datos
       //Aqui ya no es necesario hacer validaciones ya que todas estas se hicieron atras
+
       EmployeService.create(this.employe)
         .then((response) => {
           this.employe.id = null;

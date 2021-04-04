@@ -15,7 +15,7 @@
     <v-menu offset-y class="ml-4">
       <template v-slot:activator="{ on, attrs }">
         <v-btn class="ml-4" text dark rounded v-bind="attrs" v-on="on">
-          Gestionar proyectos
+          Gestionar fases y tipos
           <v-icon class="mr-2 white--text">mdi-chevron-down</v-icon>
         </v-btn>
       </template>

@@ -29,7 +29,7 @@
           elevation="2"
           color="blue-grey darken-1"
           text
-          @click="dialog = false"
+          @click="dialog = false, clear()"
         >
           Cancelar
         </v-btn>
@@ -55,6 +55,9 @@ export default {
     };
   },
   methods: {
+    clear(){
+      this.type.name = "";
+    },
     saveType() {
       if (this.type.name === "") {
         Notify.fillFields("form-type");
@@ -63,7 +66,7 @@ export default {
           .then((response) => {
             Notify.done("type");
             this.dialog = false;
-            this.type.name = "";
+            this.clear();
             this.reload();
           })
           .catch((e) => {

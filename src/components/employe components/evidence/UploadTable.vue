@@ -63,7 +63,8 @@ export default {
       this.$router.push("/btnUploadDeliverable/"+item.project.type.id+"/"+item.project.id);
     },
     getAllProjects(){
-      AttachedResourceService.getByIdEmp(1)
+      //el id es estático hasta tener el dato del inicio de sesión
+      AttachedResourceService.getByIdEmp(4)
       .then((response )=>{
         this.projects=response.data;
       })
