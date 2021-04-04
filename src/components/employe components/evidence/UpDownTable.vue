@@ -91,7 +91,7 @@
                   elevation="2"
                   color="blue-grey darken-1"
                   text
-                  @click="dialog = false"
+                  @click="dialog = false, clear();"
                 >
                   Cancelar
                 </v-btn>
@@ -129,14 +129,14 @@ export default {
         {
           text: "Lista de entregables",
           align: "start",
-          value: "name",
+          value: "deliverable.name",
         },
         { text: "Descargar archivo", align: "center", value: "down" },
         { text: "Subir avance", align: "center", value: "up" },
       ],
       deliverables: [],
       phases: [],
-      allData:[],
+      allData: [],
       currentFile: undefined,
       idAsignacion: 0,
       progress: {
@@ -151,20 +151,25 @@ export default {
     };
   },
   methods: {
+    clear() {
+      this.currentFile = undefined;
+      this.progress.description = "";
+      this.progress.finish = false;
+    },
     subir(item) {
       this.idAsignacion = item.id;
       ProgressService.finish(this.idProyecto, this.idAsignacion)
-      .then((response)=>{
-        if(response.data == false){
-          this.dialog= true;
-        }else{
-          Notify.fillFields("foundFinish");
-        }
-      })
-      .catch((e)=>{
-        console.log(e);
-        Notify.error("getData");
-      })
+        .then((response) => {
+          if (response.data == false) {
+            this.dialog = true;
+          } else {
+            Notify.fillFields("foundFinish");
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+          Notify.error("getData");
+        });
     },
     getPhases(id) {
       //consulta a fase_tipo y regresa todos los elemetos según el tipo de proyecto
@@ -172,15 +177,15 @@ export default {
         .then((response) => {
           this.phases = response.data; //guarda los items de fase_tipo
           this.phases.map((item, i) => {
-            let idFase = item.id;//guarda idfase_tipo (idfase_proyecto en BD)
+            let idFase = item.id; //guarda idfase_tipo (idfase_proyecto en BD)
             DeliverableAssigmentService.searchDeliverable(idFase)
               .then((response) => {
                 this.allData = response.data;
-                //recorremos cada uno de los objetos de fase_tipo 
-                this.allData.map((entregable, j)=>{
+                //recorremos cada uno de los objetos de fase_tipo
+                this.allData.map((entregable, j) => {
                   //console.log(entregable);
-                  this.deliverables.push(entregable.deliverable);
-                })
+                  this.deliverables.push(entregable);
+                });
               })
               .catch((e) => {
                 console.log(e);
@@ -208,9 +213,8 @@ export default {
         ProgressService.save(formData)
           .then((response) => {
             Notify.done("progress");
-            this.currentFile = undefined;
+            this.clear();
             this.dialog = false;
-            this.progress.description = "";
           })
           .catch((e) => {
             console.log(e);
@@ -223,7 +227,7 @@ export default {
     },
   },
   mounted() {
-    this.deliverables=[];
+    this.deliverables = [];
     this.getPhases(this.$route.params.id);
     this.idProyecto = this.$route.params.proyecto;
   },
