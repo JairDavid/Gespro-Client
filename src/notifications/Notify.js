@@ -179,6 +179,9 @@ class Notify {
       case 'typeContent':
         text = 'Contenido registrado';
         break;
+      case 'profileUpdate':
+        text = 'Perfil actualizado'
+        break;
     }
     return Vue.$toast.success(text + ' correctamente.', {
       position: 'bottom-right',
@@ -244,6 +247,9 @@ class Notify {
   info(message) {
     let text = '';
     switch (message) {
+      case 'userNotFund':
+        text = 'Usuario o contraseña incorrectos, verifique sus datos.';
+        break;
       case 'employeNotFund':
         text = 'No se ha encontrado ningún empleado con ese curp.';
         break;
@@ -264,6 +270,9 @@ class Notify {
         break;
       case 'alertStatusTrue':
         text = 'El usuario ya se encontraba activo';
+        break;
+      case 'notEqualPassword':
+        text = 'Las contraseñas son diferentes';
         break;
     }
     return Vue.$toast.info(text, {

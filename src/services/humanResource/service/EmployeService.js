@@ -11,9 +11,8 @@ class EmployeService {
         return API.post('/guardar', obj);
     }
     edit(id, obj) {
-        return API.put(`/actualizar/${id}`,obj);
+        return API.put(`/actualizar/${id}`, obj);
     }
-    
     eliminar(id) {
         return API.delete(`/eliminar/${id}`);
     }
@@ -23,7 +22,7 @@ class EmployeService {
     consultaEmail(email) {
         return API.get(`/correo/${email}`);
     }
-    consultaCurp(curp){
+    consultaCurp(curp) {
         return API.get(`/consultaCurp/${curp}`);
     }
 }

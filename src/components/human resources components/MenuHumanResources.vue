@@ -47,7 +47,7 @@
       <span class="mr-2 black--text">Perfil</span>
     </v-btn>
 
-    <v-btn color="white" class="ml-3" rounded @click="logout()">
+    <v-btn color="white" class="ml-3" rounded @click="logout">
       <v-icon class="mr-2 black--text">mdi-exit-to-app</v-icon>
       <span class="mr-2 black--text">Cerrar Sesión</span>
     </v-btn>
@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   name: "Menu",
   data: () => ({
@@ -103,9 +104,7 @@ export default {
       const path = `/profile`;
       if (this.$route.path !== path) this.$router.push(path);
     },
-    logout() {
-      this.$router.replace("/");
-    },
+    ...mapActions(["logout"]),
   },
 };
 </script>

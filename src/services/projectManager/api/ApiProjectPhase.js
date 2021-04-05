@@ -1,8 +1,11 @@
 import axios from 'axios'
-
+const token = localStorage.getItem("accessToken");
 export default axios.create({
     baseURL: "http://localhost:8080/faseTipo",
-    headers:{
-        "Content-type": "application/json"
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        "Access-Control-Allow-Origin": "*",
+        'Authorization': `Bearer ${token}`
     }
 })

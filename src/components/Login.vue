@@ -30,7 +30,7 @@
                     <v-main class="ma-9 p-5">
                       <v-text-field
                         color="red"
-                        v-model="email"
+                        v-model="username"
                         outlined
                         label="Correo electrónico"
                         prepend-inner-icon="mdi-email"
@@ -98,15 +98,20 @@ export default {
     return {
       show1: false,
       password: "",
-      email: "",
+      username: "",
     };
   },
   components: {
     RecoverPassword,
   },
   methods: {
-    acceder() {
-    this.$router.replace("/homeHumanResources");
+    async acceder() {
+      try {
+        let sessionData = { username: this.username, password: this.password };
+        await this.$store.dispatch("doLogin", sessionData);
+      } catch (e) {
+        console.log(e);
+      }
     },
   },
 };
