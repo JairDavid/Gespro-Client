@@ -29,7 +29,7 @@
             <v-btn
               rounded
               color="blueButton"
-              :href="'http://localhost:8080/entregable/descargar/' + item.id"
+              :href="'http://localhost:8080/entregable/descargar/' + item.deliverable.id"
             >
               <v-icon class="white--text">mdi-cloud-download</v-icon>
             </v-btn>
