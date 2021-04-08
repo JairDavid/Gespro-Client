@@ -81,10 +81,10 @@ export default {
     },
     //verifica que el puesto no este antes registrado
     consultarName() {
-      LaborService.getOneName(this.labor.name)
+      LaborService.getName(this.labor.name)
         .then((response) => {
           this.nameValidation = response.data;
-          if (this.nameValidation === "") {
+          if (this.nameValidation == false) {
             this.addLabor();
           } else {
             this.dialog = true;
@@ -97,7 +97,7 @@ export default {
     },
     //Si todo sale bien el puesto se añade 
     addLabor() {
-      LaborService.getOneName(this.labor.name)
+      LaborService.getName(this.labor.name)
         .then((response) => {
           //verifica si el nombre no es nulo o si esta vacio
           if (response.data === true) {

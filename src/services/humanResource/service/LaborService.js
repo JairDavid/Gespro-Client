@@ -16,9 +16,6 @@ class LaborService {
     eliminar(id) {
         return API.delete(`/eliminar/${id}`)
     }
-    getOneName(value){
-        return API.get(`/consultaNombre/${value}`);
-    }
     getName(name){
         return API.get(`/consultaPorNombre/${name}`);
     }
