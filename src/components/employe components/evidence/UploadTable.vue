@@ -64,7 +64,8 @@ export default {
     },
     getAllProjects(){
       //el id es estático hasta tener el dato del inicio de sesión
-      AttachedResourceService.getByIdEmp(4)
+      let idEmp = localStorage.getItem("sysin");
+      AttachedResourceService.getByIdEmp(idEmp)
       .then((response )=>{
         this.projects=response.data;
       })
