@@ -25,9 +25,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async doLogin({ commit }, loginData) {
+    doLogin({ commit }, loginData) {
       commit('loginStart');
-      await Auth.getSession(loginData)
+      Auth.getSession(loginData)
         .then((response) => {
           commit('updateAccessToken', response.data.jwt);
           localStorage.setItem('accessToken', this.state.accessToken);
@@ -35,7 +35,7 @@ export default new Vuex.Store({
           commit('updateAccessToken', null);
           Notify.info("userNotFund");
         })
-      await EmployeeService.consultaEmail(loginData.username)
+      EmployeeService.consultaEmail(loginData.username)
         .then((response) => {
           if (response.data.password == loginData.password && response.data.email == loginData.username) {
             localStorage.setItem('sysrl', response.data.role.id);
