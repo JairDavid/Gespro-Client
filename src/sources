@@ -17,57 +17,43 @@ git push -u origin master    (publica los cambios al repo)
 
               if(this.allData[i].fase.id){
 
-        }
+        
 
 
-
-        EmployeeService.consultaEmail(loginData.username)
-        .then((res) => {
-          this.state.userData = res;
-          switch (this.state.userData.role.id) {
-            case 1:
-              //rol coordinador
-              router.replace("/homeCoordinator");
-              break;
-            case 2:
-              //rol controlador
-              router.replace("/homeController");
-              break;
-            case 3:
-              //rol recursos humanos
-              router.replace("/homeHumanResources");
-              break;
-            case 4:
-              //rol administrador de proyectos
-              router.replace("/homeProjectManager");
-              break;
-            case 5:
-              //rol empleado
-              router.replace("/homeEmploye");
-              break;
+      EmployeeService.consultaEmail(loginData.username)
+        .then((response) => {
+          if (response.data.password == loginData.password && response.data.email == loginData.username) {
+            localStorage.setItem('sysrl', response.data.role.id);
+            localStorage.setItem('sysin', response.data.id);
+            switch (response.data.role.id) {
+              case 1:
+                //rol coordinador
+                router.replace("/homeCoordinator");
+                break;
+              case 2:
+                //rol controlador
+                router.replace("/homeController");
+                break;
+              case 3:
+                //rol recursos humanos
+                router.replace("/homeHumanResources");
+                break;
+              case 4:
+                //rol administrador de proyectos
+                router.replace("/homeProjectManager");
+                break;
+              case 5:
+                //rol empleado
+                router.replace("/homeEmploye");
+                break;
+            }
+          } else {
+            commit('loginStop');
+            localStorage.removeItem('accessToken');
           }
+        }).catch((e) => {
+          commit('loginStop');
+          localStorage.removeItem('accessToken');
         })
-        .catch((e) => {
-          console.log(e);
-        })
-
-
-
-
-    <div v-if="this.getSession.rol.id === 1">
-      <MenuCoordinator />
-    </div>
-    <div v-else-if="this.getSession.rol.id === 2">
-      <MenuController />
-    </div>
-    <div v-else-if="this.getSession.rol.id === 3">
-      <MenuHumanResources />
-    </div>
-    <div v-else-if="this.getSession.rol.id === 4">
-      <MenuProjectManager />
-    </div>
-    <div v-else-if="this.getSession.rol.id === 5">
-      <MenuEmploye />
-    </div>
 
 

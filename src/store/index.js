@@ -25,17 +25,17 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    doLogin({ commit }, loginData) {
+    async doLogin({ commit }, loginData) {
       commit('loginStart');
-      Auth.getSession(loginData)
+      await Auth.getSession(loginData)
         .then((response) => {
           commit('updateAccessToken', response.data.jwt);
           localStorage.setItem('accessToken', this.state.accessToken);
         }).catch((e) => {
-          commit('updateAccessToken', null);
+          commit('loginStop');
           Notify.info("userNotFund");
         })
-      EmployeeService.consultaEmail(loginData.username)
+      await EmployeeService.consultaEmail(loginData.username)
         .then((response) => {
           if (response.data.password == loginData.password && response.data.email == loginData.username) {
             localStorage.setItem('sysrl', response.data.role.id);
@@ -63,11 +63,11 @@ export default new Vuex.Store({
                 break;
             }
           } else {
-            commit('updateAccessToken', null);
+            commit('loginStop');
             localStorage.removeItem('accessToken');
           }
         }).catch((e) => {
-          commit('updateAccessToken', null);
+          commit('loginStop');
           localStorage.removeItem('accessToken');
         })
     },
