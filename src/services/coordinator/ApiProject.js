@@ -1,11 +1,24 @@
 import axios from 'axios';
-const token = localStorage.getItem("accessToken");
-export default axios.create({
+const newAxios = axios.create({
     baseURL: "http://localhost:8080/proyecto",
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         "Access-Control-Allow-Origin": "*",
-        'Authorization': `Bearer ${token}`
     },
 });
+
+newAxios.interceptors.request.use(async (config) => {
+    const token = await localStorage.getItem('accessToken')
+    if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`
+    }
+    return config
+}, (error) => {
+    return error
+})
+
+newAxios.interceptors.response.use(res => {
+    return res
+})
+export default newAxios;
