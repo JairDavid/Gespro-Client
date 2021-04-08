@@ -269,11 +269,17 @@ export default {
         loanMin: (value) => {
           if (value < 0) {
             this.content.percent = 0;
+            return false;
+          } else {
+            return true;
           }
         },
         loanMax: (value) => {
           if (value > 100) {
             this.content.percent = 100;
+            return false;
+          } else {
+            return true;
           }
         },
       },
@@ -362,7 +368,6 @@ export default {
           }
         }
       }
-      
     },
     //
     cancel() {
@@ -392,7 +397,6 @@ export default {
         };
         TypePhaseService.save(fase_tipo)
           .then((response) => {
-            console.log(response.data);
             let idfasetipo = response.data.id;
             let porcentajeIndividual =
               response.data.percent / item.entregables.length;

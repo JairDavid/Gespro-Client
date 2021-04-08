@@ -138,12 +138,18 @@ export default {
       rules: {
         durationMin: (value) => {
           if (value < 1) {
-            this.project.duration= 1;
+            this.project.duration = 1;
+            return false;
+          } else {
+            return true;
           }
         },
         costMin: (value) => {
           if (value < 1) {
-            this.project.cost= 1;
+            this.project.cost = 1;
+            return false;
+          } else {
+            return true;
           }
         },
       },
