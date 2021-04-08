@@ -1,3 +1,4 @@
+import axios from 'axios';
 import API from '../api/ApiEmploye';
 
 class EmployeService {
@@ -24,6 +25,16 @@ class EmployeService {
     }
     consultaCurp(curp) {
         return API.get(`/consultaCurp/${curp}`);
+    }
+    consultaEmailAxios(email, token) {
+        return axios.get(`http://localhost:8080/empleado/correo/${email}`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*",
+                'Authorization': `Bearer ${token}`
+            }
+        })
     }
 }
 

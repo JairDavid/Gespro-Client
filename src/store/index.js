@@ -34,8 +34,8 @@ export default new Vuex.Store({
         }).catch((e) => {
           commit('loginStop');
           Notify.info("userNotFund");
-        })
-      await EmployeeService.consultaEmail(loginData.username)
+        });
+      await EmployeeService.consultaEmailAxios(loginData.username, this.state.accessToken)
         .then((response) => {
           if (response.data.password == loginData.password && response.data.email == loginData.username) {
             localStorage.setItem('sysrl', response.data.role.id);
@@ -66,10 +66,11 @@ export default new Vuex.Store({
             commit('loginStop');
             localStorage.removeItem('accessToken');
           }
-        }).catch((e) => {
+        })
+        .catch((e) => {
           commit('loginStop');
           localStorage.removeItem('accessToken');
-        })
+        });
     },
     fetchAccessToken({ commit }) {
       commit('updateAccessToken', localStorage.getItem('accessToken'));
