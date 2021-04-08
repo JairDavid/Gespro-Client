@@ -11,6 +11,9 @@ export default new Vuex.Store({
     accessToken: null,
     loggingIn: false,
   },
+  getters: {
+    getStatusLogin: state => { return state.loggingIn; }
+  },
   mutations: {
     loginStart: state => state.loggingIn = true,
     loginStop: (state) => {
