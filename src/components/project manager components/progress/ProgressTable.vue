@@ -106,7 +106,7 @@
               rounded
               color="blueButton"
               dark
-              :href="`http://localhost:8080/avance/descargar/${item.id}`"
+              @click="descargar(item.id)"
             >
               <v-icon> mdi-cloud-download </v-icon>
             </v-btn>
@@ -197,6 +197,41 @@ export default {
       })
 
     },
+
+    // Desacarga el avance
+
+      descargar(idavance) {
+      const token = localStorage.getItem("accessToken");
+      axios({
+        url: "http://localhost:8080/avance/descargar/" + idavance,
+        method: "GET",
+        responseType: "blob", // important
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          let disposition = response.headers["content-disposition"]; // Obtener contenido-disposición
+          let fileInfo = disposition
+            ? disposition.substr(disposition.indexOf("filename")) //saca el filename
+            : "";
+          let name = fileInfo ? fileInfo.split("=")[1] : "";
+          let fileName = name.replace('"', ""); //le quita la primer "
+          // BLOB NAVIGATOR
+          const url = window.URL.createObjectURL(new Blob([response.data])); //genera el blob
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", fileName.replace('"', "")); //le quita el último ", manda el nombre del archivo
+          document.body.appendChild(link);
+          link.click();
+        })
+        .catch((e) => {
+          console.log(e);
+          Notify.error("getData");
+        });
+    },
+
+
 
     verProgreso(item) {
       let id = 0

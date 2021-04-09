@@ -61,13 +61,7 @@
           :search="searchTable"
         >
           <template v-slot:[`item.descargar`]="{ item }">
-            <v-btn
-              rounded
-              color="blueButton"
-              dark
-              :href="`http://localhost:8080/entregable/descargar/${item.id}`" 
-              
-            >
+            <v-btn rounded color="blueButton" dark @click="descargar(item.id)">
               <v-icon> mdi-cloud-download </v-icon>
             </v-btn>
           </template>
@@ -92,7 +86,7 @@ export default {
       ],
       encabezado: [
         { text: "Entregable", aling: "center", value: "name" },
-        { text: "Descargar", value :"descargar"}
+        { text: "Descargar", value: "descargar" },
       ],
       proyectos: [],
       fases: [],
@@ -124,7 +118,7 @@ export default {
     // Obtiene todas las fases dependiendo del tipo de proyecto
     verEntregables(item) {
       let id = 0;
-      let idPhase = 0
+      let idPhase = 0;
       this.dialog = true;
       this.seeDataRow = item;
       id = this.seeDataRow.type.id;
@@ -134,24 +128,57 @@ export default {
           this.fases = response.data;
 
           // Obtiene todos los entregables que contienen las fases
-          this.fases.map((item, i) =>{
-            idPhase = item.id
+          this.fases.map((item, i) => {
+            idPhase = item.id;
             DeliverableAssigmentService.searchDeliverable(idPhase)
-            .then(response =>{
-              this.dataFases = response.data
-               
-               // Obtenemos solo los objetos de entregables que trae la data de "dataFases"
-              this.dataFases.map((item, j) =>{
-                this.entregables.push(item.deliverable);
-              })
+              .then((response) => {
+                this.dataFases = response.data;
 
-            }).catch(e =>{
-              console.log(e)
-            })
-          })
+                // Obtenemos solo los objetos de entregables que trae la data de "dataFases"
+                this.dataFases.map((item, j) => {
+                  this.entregables.push(item.deliverable);
+                });
+              })
+              .catch((e) => {
+                console.log(e);
+              });
+          });
         })
         .catch((e) => {
           console.log(e);
+        });
+    },
+
+    // Descarga del entregable
+
+    descargar(identregable) {
+      const token = localStorage.getItem("accessToken");
+      axios({
+        url: "http://localhost:8080/entregable/descargar/" + identregable,
+        method: "GET",
+        responseType: "blob", // important
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          let disposition = response.headers["content-disposition"]; // Obtener contenido-disposición
+          let fileInfo = disposition
+            ? disposition.substr(disposition.indexOf("filename")) //saca el filename
+            : "";
+          let name = fileInfo ? fileInfo.split("=")[1] : "";
+          let fileName = name.replace('"', ""); //le quita la primer "
+          // BLOB NAVIGATOR
+          const url = window.URL.createObjectURL(new Blob([response.data])); //genera el blob
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", fileName.replace('"', "")); //le quita el último ", manda el nombre del archivo
+          document.body.appendChild(link);
+          link.click();
+        })
+        .catch((e) => {
+          console.log(e);
+          Notify.error("getData");
         });
     },
   },
