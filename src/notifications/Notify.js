@@ -94,6 +94,15 @@ class Notify {
       case 'laborInvalid':
         text = 'El puesto ingresado ya esta registrado favor de intentar con otro';
         break;
+      case 'tokenInvalid':
+        text = 'El token ingresado es inválido';
+        break;
+      case 'missingEmail':
+        text = 'El correo electrónico es obligatorio';
+        break;
+      case 'missingToken':
+        text = 'El token es obligatorio';
+        break;
     }
     return Vue.$toast.warning(text, {
       position: 'bottom-right',
@@ -182,6 +191,9 @@ class Notify {
       case 'profileUpdate':
         text = 'Perfil actualizado'
         break;
+      case 'sendToken':
+        text = 'Token enviado al correo'
+        break;
     }
     return Vue.$toast.success(text + ' correctamente.', {
       position: 'bottom-right',
@@ -227,6 +239,9 @@ class Notify {
         break;
       case 'errorStatus':
         text = 'al actualizar el estado';
+        break;
+      case 'sendData':
+        text = 'al enviar correo.';
         break;
     }
     return Vue.$toast.error('Ocurrió un error ' + text, {

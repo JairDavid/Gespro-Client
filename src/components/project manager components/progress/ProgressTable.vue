@@ -119,7 +119,7 @@
 <script>
 import ProjectService from "../../../services/projectManager/service/ProjectService";
 import ProgressService from "../../../services/projectManager/service/ProgressService";
-
+import axios from "axios";
 export default {
   name: "ProgressTable",
   data() {

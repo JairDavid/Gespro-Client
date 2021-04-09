@@ -74,7 +74,7 @@
 import ProjectService from "../../../services/projectManager/service/ProjectService";
 import ProgressService from "../../../services/projectManager/service/ProjectPhaseService";
 import DeliverableAssigmentService from "../../../services/projectManager/service/DeliverableAssigmentService";
-
+import axios from "axios";
 export default {
   name: "DeliverableProjectTable",
   data() {
