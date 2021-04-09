@@ -113,6 +113,14 @@ export default {
         console.log(e);
       }
     },
+    deleteData() {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("sysrl");
+      localStorage.removeItem("sysin");
+    },
+  },
+  mounted() {
+    this.deleteData();
   },
 };
 </script>
