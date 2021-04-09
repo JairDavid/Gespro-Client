@@ -39,11 +39,11 @@
           color="red"
           prepend-inner-icon="mdi-account-circle"
           v-model="employe.fullName"
+          class="pr-10"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="1"></v-col>
 
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="4">
         <h6 class="subtitle-1">CURP:</h6>
         <v-text-field
           disabled
@@ -52,9 +52,10 @@
           color="red"
           prepend-inner-icon="mdi-account-box"
           v-model="employe.curp"
+          class="pr-10"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="4" md="3">
+      <v-col cols="12" sm="4">
         <h6 class="subtitle-1">Fecha de nacimiento:</h6>
         <v-text-field
           disabled
@@ -64,9 +65,9 @@
           color="red"
           prepend-inner-icon="mdi-calendar"
           v-model="employe.birthDate"
+          class="pr-10"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="1"></v-col>
 
       <v-col cols="12" sm="4">
         <h6 class="subtitle-1">Dirección:</h6>
@@ -77,11 +78,11 @@
           color="red"
           prepend-inner-icon="mdi-home"
           v-model="employe.adress"
+          class="pr-10"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="1"></v-col>
 
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="4">
         <h6 class="subtitle-1">Teléfono:</h6>
         <v-text-field
           disabled
@@ -91,9 +92,10 @@
           color="red"
           prepend-inner-icon="mdi-phone"
           v-model="employe.phoneNumber"
+          class="pr-10"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="4">
         <h6 class="subtitle-1">Grado de estudio:</h6>
         <v-text-field
           disabled
@@ -102,9 +104,9 @@
           color="red"
           prepend-inner-icon="mdi-school"
           v-model="employe.degree"
+          class="pr-10"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="1"></v-col>
 
       <v-col cols="12" sm="4">
         <h6 class="subtitle-1">Correo electrónico:</h6>
@@ -116,11 +118,11 @@
           color="red"
           prepend-inner-icon="mdi-email"
           v-model="employe.email"
+          class="pr-10"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="1"></v-col>
 
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="4">
         <h6 class="subtitle-1">Rol:</h6>
         <v-select
           disabled
@@ -129,6 +131,7 @@
           color="red"
           prepend-inner-icon="mdi-account-supervisor"
           :label="employe.role.name"
+          class="pr-10"
         ></v-select>
       </v-col>
     </v-row>

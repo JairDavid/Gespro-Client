@@ -39,9 +39,9 @@
           prepend-inner-icon="mdi-account-circle"
           v-model="employe.fullName"
           :rules="nameRules"
+          class="pr-10"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="1"></v-col>
 
       <v-col cols="12" sm="3">
         <h6 class="subtitle-1">CURP:</h6>
@@ -52,6 +52,7 @@
           prepend-inner-icon="mdi-account-box"
           v-model="employe.curp"
           :rules="curpRules"
+          class="pr-10"
         ></v-text-field>
       </v-col>
       <v-col cols="12" sm="3">
@@ -63,9 +64,10 @@
           color="red"
           prepend-inner-icon="mdi-calendar"
           v-model="employe.birthDate"
+          class="pr-10"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="1"></v-col>
+
       <v-col cols="12" sm="4">
         <h6 class="subtitle-1">Dirección:</h6>
         <v-text-field
@@ -75,9 +77,9 @@
           prepend-inner-icon="mdi-home"
           v-model="employe.adress"
           :rules="adressRules"
+          class="pr-10"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="1"></v-col>
 
       <v-col cols="12" sm="3">
         <h6 class="subtitle-1">Teléfono:</h6>
@@ -89,6 +91,7 @@
           prepend-inner-icon="mdi-phone"
           v-model="employe.phoneNumber"
           :rules="[phoneRules.phoneRulesMax, phoneRules.phoneRulesMin]"
+          class="pr-10"
         ></v-text-field>
       </v-col>
 
@@ -102,9 +105,10 @@
           prepend-inner-icon="mdi-school"
           v-model="employe.degree"
           :rules="degreeRules"
+          class="pr-10"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="1"></v-col>
+
       <v-col cols="12" sm="4" md="4">
         <h6 class="subtitle-1">Correo electrónico:</h6>
         <v-text-field
@@ -115,9 +119,9 @@
           color="red"
           prepend-inner-icon="mdi-email"
           v-model="employe.email"
+          class="pr-10"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="1"></v-col>
 
       <v-col cols="12" sm="3">
         <h6 class="subtitle-1">Rol:</h6>
@@ -128,6 +132,7 @@
           color="red"
           prepend-inner-icon="mdi-account-supervisor"
           :label="employe.role.name"
+          class="pr-10"
         ></v-select>
       </v-col>
     </v-row>
@@ -216,7 +221,7 @@ export default {
           v.length <= 128 || "El nombre debe tener menos de 128 caracteres",
       ],
       curpRules: [
-        (v) => v.length <= 18 || "El Curp debe de tener 18 carácteres",
+        (v) => v.length === 18 || "El Curp debe de tener 18 carácteres",
       ],
       adressRules: [
         (v) =>
@@ -340,7 +345,7 @@ export default {
         //Si no encuentra ese curp en alguno de mis empleados manda este mensaje
         Notify.fillFields("searchEmploye");
       } else {
-        //Y si no esta vacio compara que el metodo 
+        //Y si no esta vacio compara que el metodo
         EmployeService.consultaCurp(this.param)
           .then((response) => {
             //En caso de no encontrar nada le envia el mensaje

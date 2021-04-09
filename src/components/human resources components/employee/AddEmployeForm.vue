@@ -22,10 +22,10 @@
           prepend-inner-icon="mdi-account-circle"
           v-model="employe.fullName"
           :rules="nameRules"
+          class="pr-10"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="1"></v-col>
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="4">
         <h6 class="mb-2 subtitle-1">CURP:</h6>
         <v-text-field
           outlined
@@ -34,10 +34,10 @@
           prepend-inner-icon="mdi-account-box"
           v-model="employe.curp"
           :rules="curpRules"
+          class="pr-10"
         ></v-text-field>
       </v-col>
-
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="4">
         <h6 class="mb-2 subtitle-1">Fecha de nacimiento:</h6>
         <v-text-field
           type="date"
@@ -47,9 +47,9 @@
           color="red"
           prepend-inner-icon="mdi-calendar-range"
           v-model="employe.birthDate"
+          class="pr-10"     
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="1"></v-col>
       <v-col cols="12" sm="4">
         <h6 class="mb-2 subtitle-1">Domicilio:</h6>
         <v-text-field
@@ -59,11 +59,10 @@
           prepend-inner-icon="mdi-home"
           v-model="employe.adress"
           :rules="adressRules"
+          class="pr-10"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="1"></v-col>
-
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="4">
         <h6 class="mb-2 subtitle-1">Teléfono:</h6>
         <v-text-field
           type="number"
@@ -73,10 +72,11 @@
           prepend-inner-icon="mdi-phone"
           v-model="employe.phoneNumber"
           :rules="[phoneRules.phoneRulesMax, phoneRules.phoneRulesMin]"
+          class="pr-10"
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="4">
         <h6 class="mb-2 subtitle-1">Último grado de estudios:</h6>
         <v-text-field
           outlined
@@ -85,9 +85,9 @@
           prepend-inner-icon="mdi-school"
           v-model="employe.degree"
           :rules="degreeRules"
+          class="pr-10"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="1"></v-col>
       <v-col cols="12" sm="4">
         <h6 class="mb-2 subtitle-1">Correo electrónico:</h6>
         <v-text-field
@@ -98,11 +98,10 @@
           prepend-inner-icon="mdi-email"
           v-model="employe.email"
           :rules="[emailRules.lengthMin, emailRules.format]"
+          class="pr-10"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="1"></v-col>
-
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="4">
         <h6 class="mb-2 subtitle-1">Rol:</h6>
         <v-select
           outlined
@@ -113,6 +112,7 @@
           v-model="employe.role.id"
           item-text="name"
           item-value="id"
+          class="pr-10"
         ></v-select>
       </v-col>
     </v-row>
@@ -164,7 +164,7 @@ export default {
           v.length <= 128 || "El nombre debe tener menos de 128 caracteres",
       ],
       curpRules: [
-        (v) => v.length <= 18 || "El Curp debe de tener 18 carácteres",
+        (v) => v.length === 18 || "El Curp debe de tener 18 carácteres",
       ],
       adressRules: [
         (v) =>
