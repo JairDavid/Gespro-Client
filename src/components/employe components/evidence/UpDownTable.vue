@@ -29,7 +29,7 @@
             <v-btn
               rounded
               color="blueButton"
-              :href="'http://localhost:8080/entregable/descargar/' + item.deliverable.id"
+              @click="descargar(item.deliverable.id)"
             >
               <v-icon class="white--text">mdi-cloud-download</v-icon>
             </v-btn>
@@ -91,7 +91,7 @@
                   elevation="2"
                   color="blue-grey darken-1"
                   text
-                  @click="dialog = false, clear();"
+                  @click="(dialog = false), clear()"
                 >
                   Cancelar
                 </v-btn>
@@ -117,7 +117,7 @@ import Notify from "../../../notifications/Notify";
 import DeliverableService from "../../../services/employe/service/DeliverableService";
 import ProjectPhaseService from "../../../services/employe/service/ProjectPhaseService";
 import DeliverableAssigmentService from "../../../services/employe/service/DeliverableAssigmentService";
-
+import axios from "axios";
 export default {
   name: "UpDownTable",
   data() {
@@ -139,6 +139,7 @@ export default {
       allData: [],
       currentFile: undefined,
       idAsignacion: 0,
+      nombreArchivo: "",
       progress: {
         id: null,
         description: "",
@@ -224,6 +225,36 @@ export default {
     },
     getFile(e) {
       this.currentFile = e;
+    },
+    descargar(identregable) {
+      const token = localStorage.getItem("accessToken");
+      axios({
+        url: "http://localhost:8080/entregable/descargar/" + identregable,
+        method: "GET",
+        responseType: "blob", // important
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          let disposition = response.headers["content-disposition"]; // Obtener contenido-disposición
+          let fileInfo = disposition
+            ? disposition.substr(disposition.indexOf("filename")) //saca el filename
+            : "";
+          let name = fileInfo ? fileInfo.split("=")[1] : "";
+          let fileName = name.replace('"', ""); //le quita la primer "
+          // BLOB NAVIGATOR
+          const url = window.URL.createObjectURL(new Blob([response.data])); //genera el blob
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", fileName.replace('"', "")); //le quita el último ", manda el nombre del archivo
+          document.body.appendChild(link);
+          link.click();
+        })
+        .catch((e) => {
+          console.log(e);
+          Notify.error("getData");
+        });
     },
   },
   mounted() {
