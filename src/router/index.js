@@ -282,7 +282,9 @@ const routes = [
     }
   },
   {
-    path: '*', redirect: '/'
+    path: '*',
+    name: 'notFound',
+    component: () => import('../views/404.vue'),
   }
 ]
 
@@ -295,7 +297,6 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) {
     if (!store.getters.getStatusLogin) {
-      localStorage.clear();
       next({ name: "login" });
     }
   } else {
