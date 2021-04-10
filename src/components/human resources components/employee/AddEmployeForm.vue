@@ -14,7 +14,7 @@
 
     <v-row no-gutters>
       <v-col cols="12" sm="8">
-        <h6 class="mb-2 subtitle-1">Nombre del empleado:</h6>
+        <h6 class="subtitle-1">Nombre del empleado:</h6>
         <v-text-field
           outlined
           dense
@@ -26,7 +26,7 @@
         ></v-text-field>
       </v-col>
       <v-col cols="12" sm="4">
-        <h6 class="mb-2 subtitle-1">CURP:</h6>
+        <h6 class="subtitle-1">CURP:</h6>
         <v-text-field
           outlined
           dense
@@ -38,7 +38,7 @@
         ></v-text-field>
       </v-col>
       <v-col cols="12" sm="4">
-        <h6 class="mb-2 subtitle-1">Fecha de nacimiento:</h6>
+        <h6 class="subtitle-1">Fecha de nacimiento:</h6>
         <v-text-field
           type="date"
           min
@@ -51,7 +51,7 @@
         ></v-text-field>
       </v-col>
       <v-col cols="12" sm="4">
-        <h6 class="mb-2 subtitle-1">Domicilio:</h6>
+        <h6 class="subtitle-1">Domicilio:</h6>
         <v-text-field
           outlined
           dense
@@ -63,7 +63,7 @@
         ></v-text-field>
       </v-col>
       <v-col cols="12" sm="4">
-        <h6 class="mb-2 subtitle-1">Teléfono:</h6>
+        <h6 class="subtitle-1">Teléfono:</h6>
         <v-text-field
           type="number"
           outlined
@@ -77,7 +77,7 @@
       </v-col>
 
       <v-col cols="12" sm="4">
-        <h6 class="mb-2 subtitle-1">Último grado de estudios:</h6>
+        <h6 class="subtitle-1">Último grado de estudios:</h6>
         <v-text-field
           outlined
           dense
@@ -89,7 +89,7 @@
         ></v-text-field>
       </v-col>
       <v-col cols="12" sm="4">
-        <h6 class="mb-2 subtitle-1">Correo electrónico:</h6>
+        <h6 class="subtitle-1">Correo electrónico:</h6>
         <v-text-field
           type="email"
           outlined
@@ -102,7 +102,7 @@
         ></v-text-field>
       </v-col>
       <v-col cols="12" sm="4">
-        <h6 class="mb-2 subtitle-1">Rol:</h6>
+        <h6 class="subtitle-1">Rol:</h6>
         <v-select
           outlined
           dense

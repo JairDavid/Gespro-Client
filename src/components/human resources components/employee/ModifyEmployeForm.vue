@@ -43,7 +43,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="4">
         <h6 class="subtitle-1">CURP:</h6>
         <v-text-field
           outlined
@@ -55,7 +55,7 @@
           class="pr-10"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="4">
         <h6 class="subtitle-1">Fecha de nacimiento:</h6>
         <v-text-field
           type="date"
@@ -81,7 +81,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="4">
         <h6 class="subtitle-1">Teléfono:</h6>
         <v-text-field
           type="number"
@@ -95,7 +95,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="4">
         <h6 class="subtitle-1">Grado de estudio:</h6>
         <v-text-field
           type="email"
@@ -109,7 +109,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" sm="4" md="4">
+      <v-col cols="12" sm="4">
         <h6 class="subtitle-1">Correo electrónico:</h6>
         <v-text-field
           disabled
@@ -123,7 +123,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="4">
         <h6 class="subtitle-1">Rol:</h6>
         <v-select
           disabled
