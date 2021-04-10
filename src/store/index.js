@@ -40,7 +40,9 @@ export default new Vuex.Store({
         });
       await EmployeeService.consultaEmailAxios(loginData.username, this.state.accessToken)
         .then((response) => {
-          if (response.data.password == loginData.password && response.data.email == loginData.username) {
+          if(response.data.status === false){
+            Notify.info("statusFalse");
+          }else if (response.data.password == loginData.password && response.data.email == loginData.username) {
             localStorage.setItem('sysrl', response.data.role.id);
             localStorage.setItem('sysin', response.data.id);
             switch (response.data.role.id) {

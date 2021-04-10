@@ -289,6 +289,10 @@ class Notify {
       case 'notEqualPassword':
         text = 'Las contraseñas son diferentes';
         break;
+      case 'statusFalse':
+        text = 'Lo sentimos, pero su cuenta se encuentra inactiva.';
+        break; text = 'Las contraseñas son diferentes';
+
     }
     return Vue.$toast.info(text, {
       position: 'bottom-right',
