@@ -27,7 +27,7 @@ class EmployeService {
         return API.get(`/consultaCurp/${curp}`);
     }
     consultaEmailAxios(email, token) {
-        return axios.get(`http://localhost:8080/empleado/correo/${email}`, {
+        return axios.get(`http://52.72.71.229:2000/empleado/correo/${email}`, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
