@@ -224,8 +224,7 @@ export default {
   },
   methods: {
     updateProfile() {
-      if (this.externPassword === this.confirmPassword) {
-        this.employee.password = this.externPassword;
+      if (this.externPassword === "" && this.confirmPassword === "") {
         let id = localStorage.getItem("sysin");
         EmployeService.edit(id, this.employee)
           .then((response) => {
@@ -236,8 +235,21 @@ export default {
             console.log(e);
           });
       } else {
-        Notify.info("notEqualPassword");
-        this.dialog = false;
+        if (this.externPassword === this.confirmPassword) {
+          this.employee.password = this.externPassword;
+          let id = localStorage.getItem("sysin");
+          EmployeService.edit(id, this.employee)
+            .then((response) => {
+              Notify.done("profileUpdate");
+              this.back();
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        } else {
+          Notify.info("notEqualPassword");
+          this.dialog = false;
+        }
       }
     },
     getDataProfile() {
