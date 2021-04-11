@@ -1,6 +1,6 @@
 import axios from 'axios'
 const newAxios = axios.create({
-    baseURL: "http://localhost:8080/entregable",
+    baseURL: "http://52.72.71.229:2000/entregable",
     headers:{
         'Accept': 'application/json',
         'Content-Type': 'application/json',
