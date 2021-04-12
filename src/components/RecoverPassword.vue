@@ -210,7 +210,7 @@ export default {
         Notify.fillFields("employeForm");
       } else if (this.newpassword === this.confirmpassword) {
         axios({
-          url: `http://192.168.0.5:2500/contrasena/actualizarContrasena/${this.email}/${this.newpassword}`,
+          url: `http://100.25.145.27:2500/contrasena/actualizarContrasena/${this.email}/${this.newpassword}`,
           method: "PUT",
           headers: {
             "Content-type": "application/json",
