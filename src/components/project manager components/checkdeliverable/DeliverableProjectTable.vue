@@ -154,7 +154,7 @@ export default {
     descargar(identregable) {
       const token = localStorage.getItem("accessToken");
       axios({
-        url: "http://localhost:8080/entregable/descargar/" + identregable,
+        url: "http://100.25.145.27:2000/entregable/descargar/" + identregable,
         method: "GET",
         responseType: "blob", // important
         headers: {
