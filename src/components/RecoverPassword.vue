@@ -176,7 +176,7 @@ export default {
       } else {
         let token = Math.random().toString(36).substr(2);
         axios({
-          url: `http://192.168.0.5:2500/correo/recuperar/${this.email}/${token}`,
+          url: `http://100.25.145.27:2500/correo/recuperar/${this.email}/${token}`,
           method: "GET",
           headers: {
             "Content-type": "application/json",
