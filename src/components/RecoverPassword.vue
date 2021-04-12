@@ -176,7 +176,7 @@ export default {
       } else {
         let token = Math.random().toString(36).substr(2);
         axios({
-          url: `http://100.25.145.27:2500/correo/recuperar/${this.email}/${token}`,
+          url: `http://100.25.145.27:587/correo/recuperar/${this.email}/${token}`,
           method: "GET",
           headers: {
             "Content-type": "application/json",
@@ -210,7 +210,7 @@ export default {
         Notify.fillFields("employeForm");
       } else if (this.newpassword === this.confirmpassword) {
         axios({
-          url: `http://100.25.145.27:2500/contrasena/actualizarContrasena/${this.email}/${this.newpassword}`,
+          url: `http://100.25.145.27:587/contrasena/actualizarContrasena/${this.email}/${this.newpassword}`,
           method: "PUT",
           headers: {
             "Content-type": "application/json",
