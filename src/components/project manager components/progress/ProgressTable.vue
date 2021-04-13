@@ -203,7 +203,7 @@ export default {
       descargar(idavance) {
       const token = localStorage.getItem("accessToken");
       axios({
-        url: "http://100.25.145.27:2000/avance/descargar/" + idavance,
+        url: "http://35.172.158.0:2000/avance/descargar/" + idavance,
         method: "GET",
         responseType: "blob", // important
         headers: {
