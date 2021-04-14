@@ -82,7 +82,8 @@ export default {
       search: "",
       headers: [
         { text: "Proyecto", align: "start", value: "name" },
-        { text: "Ver entregables", value: "entregables" },
+        { text: "Tipo de proyecto", align: "center", value: "type.name" },
+        { text: "Ver entregables", align: "center", value: "entregables" },
       ],
       encabezado: [
         { text: "Entregable", aling: "center", value: "name" },

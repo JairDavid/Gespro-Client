@@ -103,6 +103,9 @@ class Notify {
       case 'missingToken':
         text = 'El token es obligatorio';
         break;
+      case 'delRepeat':
+        text = 'Se encontraron entregables repetidos, verifique sus datos';
+        break;
     }
     return Vue.$toast.warning(text, {
       position: 'bottom-right',

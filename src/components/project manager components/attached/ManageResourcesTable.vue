@@ -135,13 +135,13 @@ export default {
 
       dialog: false,
       addDataRow: {},
+      auxArray: [],
     };
   },
   methods: {
     // Deja limpio las listas desplegables
-    limpiar(){
+    limpiar() {
       (this.Adscrito.project.id = 0), (this.Adscrito.labor.id = 0);
-
     },
     // Obtener todos los proyectos en donde el empleado este registrado
     getAllProjectsAdscrito(id) {
@@ -158,7 +158,12 @@ export default {
     getAllEmplooyes() {
       EmplooyesService.getAll()
         .then((response) => {
-          this.empleados = response.data;
+          this.auxArray = response.data;
+          this.auxArray.map((emp, i) => {
+            if (parseInt(emp.role.id) === 5) {
+              this.empleados.push(emp);
+            }
+          });
         })
         .catch((e) => {
           console.log(e);

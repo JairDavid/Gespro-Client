@@ -38,7 +38,7 @@
               dark
               @click="verAvances(item)"
             >
-              <v-icon>  mdi-cloud-download </v-icon>
+              <v-icon> mdi-eye </v-icon>
             </v-btn>
           </template>
         </v-data-table>
@@ -133,8 +133,9 @@ export default {
         { text: "Ver avances", value: "avances"}
       ],
       encabezado: [
-        { text: "Avance", aling: "center", value: "deliverableAssigment.deliverable.name" },
-        { text: "Descargar", aling: "center", value :"descargar"}
+        { text: "Nombre", aling: "center", value: "deliverableAssigment.deliverable.name" },
+        { text: "Comentario final", aling: "center", value :"description"},
+        { text: "Descargar avance", aling: "center", value :"descargar"},
       ],
       progresoTotal: 0,
       proyects: [],
@@ -158,7 +159,6 @@ export default {
       ProgressService.searchIdProject(this.seeDataRow.id)
       .then(response =>{
         this.avances = response.data
-
       }).catch(e =>{
         console.log(e)
       })

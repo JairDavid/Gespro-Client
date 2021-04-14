@@ -304,6 +304,7 @@ export default {
       dialog2: false,
       acum: 0,
       bool: false,
+      bool2: false,
       e1: 1,
     };
   },
@@ -356,8 +357,12 @@ export default {
         this.dialog1 = false;
       } else {
         this.searchID(contenido);
+        this.searchDeliverableExist(contenido);
+
         if (this.bool === true) {
           Notify.fillFields("samePhase");
+        } else if (this.bool2 === true) {
+          Notify.fillFields("delRepeat");
         } else {
           if (this.acum + parseInt(contenido.percent) > 100) {
             Notify.info("outPercent");
@@ -380,6 +385,21 @@ export default {
         if (this.allData[i].fase.id === extern.fase.id) {
           this.bool = true;
           break;
+        }
+      }
+    },
+    searchDeliverableExist(extern) {
+      this.bool2 = false;
+      for (var i = 0; i < this.allData.length; i++) {
+        for (var j = 0; j < this.allData[i].entregables.length; j++) {
+          for (var k = 0; k < extern.entregables.length; k++) {
+            if (
+              this.allData[i].entregables[j].id === extern.entregables[k].id
+            ) {
+              this.bool2 = true;
+              break;
+            }
+          }
         }
       }
     },
