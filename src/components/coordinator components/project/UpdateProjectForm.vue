@@ -212,6 +212,7 @@ export default {
       dialog: false,
       projectTypes: [],
       employees: [],
+      originalName: "",
     };
   },
   methods: {
@@ -224,6 +225,26 @@ export default {
       }
     },
     updateProject() {
+      if (this.originalName === this.project.name) {
+        CoordinatorService.update(this.project.id, this.project)
+          .then((response) => {
+            //Regresa los inputs en blanco
+            this.project.id = null;
+            this.project.name = "";
+            this.project.duration = "";
+            this.project.description = "";
+            this.project.clientName = "";
+            this.project.date = "";
+            this.project.cost = "";
+            this.project.employe.id = 0;
+            this.project.type.id = 0;
+            Notify.done("updateProject");
+            this.$router.push("/generalProject");
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
       CoordinatorService.searchByName(this.project.name)
         .then((response) => {
           if (response.data.name === undefined) {
@@ -310,6 +331,7 @@ export default {
       CoordinatorService.getOne(id)
         .then((response) => {
           this.project = response.data;
+          this.originalName = response.data.name;
         })
         .catch((e) => {
           console.log(e);
