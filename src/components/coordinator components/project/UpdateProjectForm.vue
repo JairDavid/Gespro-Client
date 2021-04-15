@@ -287,6 +287,10 @@ export default {
               //información
               Notify.info("projectNotFound");
             } else {
+              //para hacer la validación
+              this.originalName = response.data.name;
+
+              
               this.project.id = response.data.id;
               this.project.name = response.data.name;
               this.project.duration = response.data.duration;
