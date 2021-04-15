@@ -64,17 +64,17 @@
         <v-card-text>
           <v-container>
             <br />
-            <h4>Ingrese el token que se le envió a su correo.</h4>
+            <h4>Ingrese el código que le hemos enviado a su correo.</h4>
             <br />
             <v-text-field
               color="red"
               v-model="tokenemail"
               outlined
-              label="Token"
+              label="Código"
               prepend-inner-icon="mdi-key-variant"
             ></v-text-field>
           </v-container>
-          <small>* Verificaremos que su el token coincida.</small>
+          <small>* Verificaremos que el código coincida.</small>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
