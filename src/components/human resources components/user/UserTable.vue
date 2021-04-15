@@ -21,7 +21,11 @@
         :items="users"
         :items-per-page="5"
         :search="search"
-      >s
+      >
+        <template v-slot:[`item.status`]="{ item }">
+          <span v-text="getStatus(item.status)"> </span>
+        </template>
+
         <template v-slot:[`item.activar`]="{ item }">
           <v-btn rounded color="blueButton" @click="activar(item)">
             <v-icon class="white--text">mdi-account-plus</v-icon>
@@ -178,7 +182,7 @@ export default {
         { text: "Nombre del empleado", align: "start", value: "fullName" },
         { text: "Curp", align: "center", value: "curp" },
         { text: "Correo", align: "center", value: "email" },
-     // { text: "Estado", align: "center", value: "status" },
+        { text: "Estado", align: "center", value: "status" },
         { text: "Activar usuario", align: "center", value: "activar" },
         { text: "Editar contraseña", align: "center", value: "editar" },
         { text: "Desactivar usuario", align: "center", value: "desactivar" },
@@ -240,22 +244,22 @@ export default {
     },
     //Actualiza la contraseña
     updatePassword() {
-      if(this.editDataRow.password===""){
+      if (this.editDataRow.password === "") {
         Notify.fillFields("updatePassword");
-        this.dialog2=true;
+        this.dialog2 = true;
         this.getAllEmploye();
-      }else{
+      } else {
         //Le manda el id y despues manda todo el objeto nuevo(en este caso solo manda la contraseña)
-      EmployeService.edit(this.editDataRow.id, this.editDataRow)
-        .then((response) => {
-          Notify.done("password");
-          this.dialog2 = false;
-          this.getAllEmploye();
-        })
-        //Manda error al guardar
-        .catch((response) => {
-          Notify.error("saveData");
-        });
+        EmployeService.edit(this.editDataRow.id, this.editDataRow)
+          .then((response) => {
+            Notify.done("password");
+            this.dialog2 = false;
+            this.getAllEmploye();
+          })
+          //Manda error al guardar
+          .catch((response) => {
+            Notify.error("saveData");
+          });
       }
     },
     //Cambia el estado a falso
@@ -290,6 +294,13 @@ export default {
           .catch((response) => {
             Notify.error("errorStatus");
           });
+      }
+    },
+    getStatus(status) {
+      if (status === true) {
+        return "Activo";
+      } else {
+        return "Inactivo";
       }
     },
   },
