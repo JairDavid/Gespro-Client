@@ -244,36 +244,37 @@ export default {
           .catch((e) => {
             console.log(e);
           });
+      } else {
+        CoordinatorService.searchByName(this.project.name)
+          .then((response) => {
+            if (response.data.name === undefined) {
+              //Actualizamos el proyecto (por ID)
+              CoordinatorService.update(this.project.id, this.project)
+                .then((response) => {
+                  //Regresa los inputs en blanco
+                  this.project.id = null;
+                  this.project.name = "";
+                  this.project.duration = "";
+                  this.project.description = "";
+                  this.project.clientName = "";
+                  this.project.date = "";
+                  this.project.cost = "";
+                  this.project.employe.id = 0;
+                  this.project.type.id = 0;
+                  Notify.done("updateProject");
+                  this.$router.push("/generalProject");
+                })
+                .catch((e) => {
+                  console.log(e);
+                });
+            } else {
+              Notify.fillFields("valid-project");
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+          });
       }
-      CoordinatorService.searchByName(this.project.name)
-        .then((response) => {
-          if (response.data.name === undefined) {
-            //Actualizamos el proyecto (por ID)
-            CoordinatorService.update(this.project.id, this.project)
-              .then((response) => {
-                //Regresa los inputs en blanco
-                this.project.id = null;
-                this.project.name = "";
-                this.project.duration = "";
-                this.project.description = "";
-                this.project.clientName = "";
-                this.project.date = "";
-                this.project.cost = "";
-                this.project.employe.id = 0;
-                this.project.type.id = 0;
-                Notify.done("updateProject");
-                this.$router.push("/generalProject");
-              })
-              .catch((e) => {
-                console.log(e);
-              });
-          } else {
-            Notify.fillFields("valid-project");
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-        });
     },
     searchByName() {
       //Buscamos el proyecto por nombre
