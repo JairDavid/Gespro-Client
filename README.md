@@ -1,6 +1,6 @@
 # **Gespro** 
 
-From the abbreviation "Gespro (Gestor de Proyectos)" is a system to be able to manage any type of project, manage contributors, assign deliverables, view progress and more features. (Gespro is not limited for only software development projects).
+From the abbreviation "Gespro (Gestor de Proyectos)" is a system to be able to manage any type of project, manage contributors, assign deliverables, view progress and more features.(Gespro is not limited for only software development projects).
 
 ### The system has 4 roles, each role has specific actions
 > - Project manager
